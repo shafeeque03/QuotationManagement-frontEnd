@@ -3,7 +3,6 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { adminLoginVerify } from '../../api/adminApi.js';
 
 const LoginPage = () => {
   const router = useRouter();
@@ -13,23 +12,14 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const res = await adminLoginVerify(loginId, password);
-      if (res?.status === 200) {
-        router.push('/dashboard');
-      } else {
-        console.log("error")
-      }
-    } catch (error) {
-      console.log(error)
-    }
+
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg flex flex-col md:flex-row w-full max-w-3xl">
         <div className="md:w-1/2 p-4">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Login to Admin Account</h2>
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Login to Employee Account</h2>
           
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
