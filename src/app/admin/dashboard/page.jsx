@@ -33,7 +33,7 @@ const page = () => {
   };
 
   return (
-    <div className="md:flex bg-gray-100">
+    <div className="md:flex">
       <Sidebar />
       <div className="w-full bg-blue-600 p-5">
         <div className="w-full">

@@ -26,3 +26,13 @@ export const searchUser = async(value)=>{
     const data = await adminInstance.get(`searchUser/${value}`);
     return data
 }
+
+export const updateUser = async(userId,values)=>{
+    const data = await adminInstance.patch("/updateUser",{userId,values});
+    return data
+}
+
+export const updatePassword = async(userId,password)=>{
+    const data = await adminInstance.patch("/changeUserPassword",{userId,password});
+    return data
+}

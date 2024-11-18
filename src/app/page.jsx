@@ -1,100 +1,58 @@
+// pages/quotations.js
 "use client"
-import Image from "next/image";
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 text-red-900">
-            {" "}Hello world
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/Page.jsx            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+import { UserMenu } from "@/app/admin/userComponents/UserMenu";
+import React, { useState } from "react";
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+const Quotations = () => {
+  const [quotations, setQuotations] = useState([
+    { no: 1, quotationNumber: "QTN001", expiryDate: "2024-12-01", status: "Pending" },
+    { no: 2, quotationNumber: "QTN002", expiryDate: "2024-11-30", status: "Approved" },
+    { no: 3, quotationNumber: "QTN003", expiryDate: "2024-12-15", status: "Rejected" },
+    { no: 4, quotationNumber: "QTN004", expiryDate: "2024-12-15", status: "Rejected" },
+  ]);
+
+  const getStatusStyle = (status) => {
+    if (status === "Approved") return "bg-green-500/20 text-green-600";
+    if (status === "Rejected") return "bg-red-500/20 text-red-600";
+    return "bg-yellow-500/20 text-yellow-600";
+  };
+
+  return (
+    <div>
+      <UserMenu/>
+    <div className="min-h-screen bg-gradient-to-r from-blue-500 via-purple-600 to-indigo-800 p-6">
+      <div className="mx-auto">
+        <h1 className="text-4xl font-bold text-white mb-8 text-center">
+          Quotations List
+        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+          {quotations.map((quotation) => (
+            <div
+              key={quotation.no}
+              className="bg-white rounded-lg shadow-lg hover:scale-105 transform transition-all duration-300 p-6"
+            >
+              <p className="text-gray-500 text-sm">No: {quotation.no}</p>
+              <h2 className="text-lg font-bold text-gray-800 mt-2">
+                Quotation #{quotation.quotationNumber}
+              </h2>
+              <p className="text-gray-700 mt-1">
+                <span className="font-medium">Expiry Date:</span>{" "}
+                {quotation.expiryDate}
+              </p>
+              <div
+                className={`inline-block mt-3 px-4 py-2 rounded-full text-sm font-semibold ${getStatusStyle(
+                  quotation.status
+                )}`}
+              >
+                {quotation.status}
+              </div>
+            </div>
+          ))}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
+    </div>
     </div>
   );
-}
+};
+
+export default Quotations;

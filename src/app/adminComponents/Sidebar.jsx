@@ -37,7 +37,7 @@ const Sidebar = () => {
 
       {/* Sidebar */}
       <div
-        className={`fixed min-h-screen top-0 left-0 z-40 w-64 h-screen p-6 overflow-y-auto bg-gradient-to-b from-blue-500 via-indigo-500 to-purple-500 text-white shadow-lg transition-transform ${
+        className={`fixed min-h-screen top-0 left-0 z-40 w-64 h-screen p-6 overflow-y-auto bg-gray-200 text-gray-700 shadow-lg transition-transform ${
           isOpen ? "block" : "hidden md:block"
         } md:w-64 md:h-auto md:relative`}
       >
@@ -68,14 +68,14 @@ const Sidebar = () => {
 
         {/* Dashboard Link */}
         <Link href="/admin/dashboard">
-          <div className="py-3">
+          <div className={`py-3 ${pathname=='/admin/dashboard'?'text-white':'text-gray-700'}`}>
             <ul className="space-y-3">
               <li>
                 <div
                   className={`flex items-center p-3 rounded-lg ${
                     pathname === "/admin/dashboard"
-                      ? "bg-purple-700 shadow-lg"
-                      : "hover:bg-purple-600 hover:shadow-md transition-all"
+                      ? "bg-red-700 shadow-lg"
+                      : "hover:bg-red-600 hover:text-white hover:shadow-md transition-all"
                   }`}
                 >
                   <svg className="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 22 21">
@@ -91,14 +91,14 @@ const Sidebar = () => {
 
         {/* Users Link */}
         <Link href="/admin/users">
-          <div className="py-3">
+        <div className={`py-3 ${pathname=='/admin/users'?'text-white':'text-gray-700'}`}>
             <ul className="space-y-3">
               <li>
                 <div
                   className={`flex items-center p-3 rounded-lg ${
                     pathname === "/admin/users"
-                      ? "bg-purple-700 shadow-lg"
-                      : "hover:bg-purple-600 hover:shadow-md transition-all"
+                      ? "bg-red-700 shadow-lg"
+                      : "hover:bg-red-600 hover:text-white hover:shadow-md transition-all"
                   }`}
                 >
                   <svg className="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 24 24">
@@ -117,14 +117,14 @@ const Sidebar = () => {
 
         {/* Quotations Link */}
         <Link href="/admin/quotations">
-          <div className="py-3">
+        <div className={`py-3 ${pathname=='/admin/quotations'?'text-white':'text-gray-700'}`}>
             <ul className="space-y-3">
               <li>
                 <div
                   className={`flex items-center p-3 rounded-lg ${
                     pathname === "/admin/quotations"
-                      ? "bg-purple-700 shadow-lg"
-                      : "hover:bg-purple-600 hover:shadow-md transition-all"
+                      ? "bg-red-700 shadow-lg"
+                      : "hover:bg-red-600 hover:text-white hover:shadow-md transition-all"
                   }`}
                 >
                   <svg className="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 24 24">
@@ -139,14 +139,14 @@ const Sidebar = () => {
 
         {/* Clients Link */}
         <Link href="/admin/clients">
-          <div className="py-3">
+        <div className={`py-3 ${pathname=='/admin/clients'?'text-white':'text-gray-700'}`}>
             <ul className="space-y-3">
               <li>
                 <div
                   className={`flex items-center p-3 rounded-lg ${
                     pathname === "/admin/clients"
-                      ? "bg-purple-700 shadow-lg"
-                      : "hover:bg-purple-600 hover:shadow-md transition-all"
+                      ? "bg-red-700 shadow-lg"
+                      : "hover:bg-red-600 hover:text-white hover:shadow-md transition-all"
                   }`}
                 >
                   <svg className="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 24 24">
