@@ -1,5 +1,4 @@
-"use client";
-import { adminLogout } from '../../../redux/AdminSlice.jsx';
+"use client"; 
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import React from 'react';
@@ -7,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import Sidebar from '../../adminComponents/Sidebar.jsx';
 import { Line } from 'react-chartjs-2'; // Importing chart.js for the graph
 import { Chart as ChartJS } from 'chart.js/auto';
+import { adminLogout } from '@/redux/slice/AdminSlice.jsx';
 
 const page = () => {
   const router = useRouter();

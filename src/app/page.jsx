@@ -1,7 +1,8 @@
 // pages/quotations.js
 "use client"
-import { UserMenu } from "@/app/admin/userComponents/UserMenu";
+import { UserMenu } from "@/app/userComponents/UserMenu";
 import React, { useState } from "react";
+import QuotationCard from "./userComponents/QuotationCard";
 
 const Quotations = () => {
   const [quotations, setQuotations] = useState([
@@ -26,28 +27,11 @@ const Quotations = () => {
           Quotations List
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-          {quotations.map((quotation) => (
-            <div
-              key={quotation.no}
-              className="bg-white rounded-lg shadow-lg hover:scale-105 transform transition-all duration-300 p-6"
-            >
-              <p className="text-gray-500 text-sm">No: {quotation.no}</p>
-              <h2 className="text-lg font-bold text-gray-800 mt-2">
-                Quotation #{quotation.quotationNumber}
-              </h2>
-              <p className="text-gray-700 mt-1">
-                <span className="font-medium">Expiry Date:</span>{" "}
-                {quotation.expiryDate}
-              </p>
-              <div
-                className={`inline-block mt-3 px-4 py-2 rounded-full text-sm font-semibold ${getStatusStyle(
-                  quotation.status
-                )}`}
-              >
-                {quotation.status}
-              </div>
-            </div>
-          ))}
+          <QuotationCard/>
+          <QuotationCard/>
+          <QuotationCard/>
+          <QuotationCard/>
+          <QuotationCard/>
         </div>
       </div>
     </div>

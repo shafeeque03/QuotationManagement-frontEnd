@@ -158,6 +158,28 @@ const Sidebar = () => {
             </ul>
           </div>
         </Link>
+
+
+        <Link href="/admin/proandser">
+        <div className={`py-3 ${pathname=='/admin/proandser'?'text-white':'text-gray-700'}`}>
+            <ul className="space-y-3">
+              <li>
+                <div
+                  className={`flex items-center p-3 rounded-lg ${
+                    pathname === "/admin/proandser"
+                      ? "bg-red-700 shadow-lg"
+                      : "hover:bg-red-600 hover:text-white hover:shadow-md transition-all"
+                  }`}
+                >
+                  <svg className="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 12c2.7 0 5-2.3 5-5S14.7 2 12 2s-5 2.3-5 5 2.3 5 5 5zm0 2c-2.7 0-8 1.3-8 4v2h16v-2c0-2.7-5.3-4-8-4z"/>
+                  </svg>
+                  <span className="font-medium text-lg">Pro/Ser</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </Link>
       </div>
     </div>
   );

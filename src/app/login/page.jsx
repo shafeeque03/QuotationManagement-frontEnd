@@ -1,18 +1,45 @@
 // src/app/admin/login/page.jsx
 "use client";
-
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import { userLoginApi } from '../api/userApi';
+import toast from 'react-hot-toast';
+import { userLogin } from '@/redux/slice/UserSlice';
+import Cookies from 'js-cookie';
+
+
 
 const LoginPage = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-
+    try {
+      let res = await userLoginApi(loginId, password);
+      if (res.status === 200) {
+        toast.success(res?.data?.message);
+  
+        // Store token in cookies
+        Cookies.set('userToken', res?.data?.token, {
+          expires: 1, // 1 day
+          secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+          sameSite: 'strict', // Protect against CSRF
+        });
+  
+        // Dispatch user login details
+        dispatch(userLogin({ token: res?.data?.token, user: res?.data?.user }));
+  
+        // Redirect user to home
+        router.push('/');
+      }
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.response?.data?.message || 'ID or Password incorrect');
+    }
   };
 
   return (

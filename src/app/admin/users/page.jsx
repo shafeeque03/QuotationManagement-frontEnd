@@ -118,7 +118,7 @@ const Page = () => {
 
         {/* Modal */}
         {isModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 fade-ef">
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 backdrop-blur-lg z-50 fade-ef">
             <div className="bg-white w-full max-w-md mx-4 p-6 rounded-lg shadow-lg relative">
               <button
                 onClick={closeModal}

@@ -4,8 +4,8 @@ import { adminLoginVerify } from "../../api/adminApi.js";
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { adminLogin } from "../../../redux/AdminSlice.jsx";
 import Cookies from 'js-cookie';
+import { adminLogin } from "@/redux/slice/AdminSlice.jsx";
 
 
 const LoginPage = () => {
@@ -19,16 +19,15 @@ const LoginPage = () => {
       e.preventDefault();
       const res = await adminLoginVerify(loginId, password);
       if (res?.status === 200) {
-        const { token } = res.data;
-        Cookies.set('adminToken', token, { expires: 3/24, secure: true, sameSite: 'strict' });
-        dispatch(
-          adminLogin({
-            token: token,
-            admin: 'Admin',
-          })
-        );
-        
-        toast.success('Verified');
+        toast.success(res?.data?.message);
+
+        Cookies.set('adminToken', res?.data?.token, {
+          expires: 1, // 1 day
+          secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+          sameSite: 'strict', // Protect against CSRF
+        });
+        dispatch(adminLogin({ token: res?.data?.token, admin: res?.data?.admin }));
+  
         router.push('/admin/dashboard');
       }
     } catch (error) {

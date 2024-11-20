@@ -17,7 +17,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       <button
         onClick={handlePrevious}
         disabled={currentPage === 1}
-        className="flex items-center px-4 py-2 rounded-lg text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800"
+        className="flex items-center px-4 py-2 rounded-lg text-white"
       >
         <FaChevronLeft className="mr-2 text-gray-700" />
       </button>
@@ -27,7 +27,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       <button
         onClick={handleNext}
         disabled={currentPage === totalPages}
-        className="flex items-center px-4 py-2 rounded-lg text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800"
+        className="flex items-center px-4 py-2 rounded-lg text-whit"
       >
         <FaChevronRight className="ml-2 text-gray-700" />
       </button>

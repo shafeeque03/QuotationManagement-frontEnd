@@ -1,10 +1,23 @@
 "use client";
+import { userLogout } from "@/redux/slice/UserSlice";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-
+import { useSelector,useDispatch } from "react-redux";
+import Cookies from 'js-cookie';
+import Link from "next/link";
 export const UserMenu = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // Controls mobile menu
-  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false); // Controls profile submenu
+  const router = useRouter()
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    Cookies.remove('userToken');
+    dispatch(userLogout());
+    router.push('/login')
+  }
+  const state = useSelector((state) => state);
+const user = state?.user?.user
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   return (
     <nav className="bg-white shadow-lg sticky top-0 z-50 w-full">
       <div className="flex items-center justify-between px-6 py-4">
@@ -25,20 +38,20 @@ export const UserMenu = () => {
         {/* Desktop Menu */}
         <ul className="hidden md:flex space-x-8">
           <li className="group">
-            <a
-              href="#"
+            <Link
+              href={{pathname:"/"}}
               className="text-gray-700 text-lg font-medium transition-colors duration-300 hover:text-indigo-600"
             >
               Quotations
-            </a>
+            </Link>
           </li>
           <li className="group">
-            <a
-              href="#"
+            <Link
+              href={{pathname:'/proandser'}}
               className="text-gray-700 text-lg font-medium transition-colors duration-300 hover:text-indigo-600"
             >
               Products/Services
-            </a>
+            </Link>
           </li>
         </ul>
 
@@ -72,18 +85,15 @@ export const UserMenu = () => {
                 : "translate-x-5 opacity-0 scale-95"
             }`}
           >
-            <a
-              href="#"
+
+              <p className="block px-4 py-2 text-gray-700 text-sm hover:bg-indigo-100">User: {user?.name || "Guest"}</p>
+           
+            <p
               className="block px-4 py-2 text-gray-700 text-sm hover:bg-indigo-100"
-            >
-              User Name
-            </a>
-            <a
-              href="#"
-              className="block px-4 py-2 text-gray-700 text-sm hover:bg-indigo-100"
+              onClick={handleLogout}
             >
               Sign Out
-            </a>
+            </p>
           </div>
         </div>
       </div>

@@ -1,20 +1,33 @@
-"use client"
-import { configureStore } from '@reduxjs/toolkit';
-import {persistReducer} from 'redux-persist';
-import {persistStore} from 'redux-persist';
+import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import {combineReducers} from "@reduxjs/toolkit";
-import adminReducer from '../redux/AdminSlice.jsx';
-import userReducer from '../redux/UserSlice.jsx';
+import { persistStore } from 'redux-persist';
+import userReducer from './slice/UserSlice';
+import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers } from '@reduxjs/toolkit';
 
+// Persist configuration
 const persistConfig = { key: 'root', storage, version: 1 };
-const reducer = combineReducers({
-  userReducer,
-  adminReducer
-})
-const persistedReducer = persistReducer(persistConfig,reducer)
-const store = configureStore({
-  reducer:persistedReducer
-})
 
-export {store}
+// Combine reducers with the correct key
+const reducer = combineReducers({
+  user: userReducer, // The key is now "user"
+});
+
+// Persisted reducer
+const persistedReducer = persistReducer(persistConfig, reducer);
+
+// Store configuration
+const store = configureStore({
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE', 'persist/REGISTER'],
+      },
+    }),
+});
+
+// Persistor
+const persistor = persistStore(store);
+
+export { store, persistor };
