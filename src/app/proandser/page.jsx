@@ -1,7 +1,9 @@
 "use client"
 import React, { useState, useEffect } from "react";
 import { UserMenu } from "../userComponents/UserMenu";
-import { getProAndSer } from "../api/adminApi";
+import { getProAndSer } from "../../api/adminApi";
+import ProductTable from "../userComponents/ProductTable";
+import ServiceTable from "../userComponents/ServiceTable";
 
 const Page = () => {
   const [products, setProducts] = useState([]);
@@ -10,6 +12,7 @@ const Page = () => {
   const [filteredServices, setFilteredServices] = useState([]);
   const [view, setView] = useState("products"); // 'services' or 'products'
   const [searchQuery, setSearchQuery] = useState("");
+  
 
   useEffect(() => {
     getProAndSer().then((res) => {
@@ -38,12 +41,14 @@ const Page = () => {
     }
   }, [searchQuery, services, products, view]);
 
+
+
   return (
     <div className="bg-white">
       <UserMenu />
 
-      <div className="p-4 md:p-12 bg-gradient-to-r from-blue-500 via-purple-600 to-indigo-800 min-h-screen">
-        <div className="flex justify-between items-center mb-4">
+      <div className="p-4 md:p-12 bg-white min-h-screen">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0">
           <div className="flex items-center justify-center space-x-4">
             <label
               htmlFor="viewToggle"
@@ -66,7 +71,7 @@ const Page = () => {
                 }
               />
             </label>
-            <span className="ml-4 text-sm font-medium text-white">
+            <span className="ml-4 text-sm font-medium text-gray-600">
               {view === "services" ? "Services" : "Products"}
             </span>
           </div>
@@ -74,7 +79,7 @@ const Page = () => {
           <input
             type="text"
             placeholder={`Search ${view}`}
-            className="border rounded-md p-2 w-full max-w-md"
+            className="border border-white/20 bg-gray-200 text-white rounded-md p-2 w-full max-w-md focus:outline-none focus:ring-2 focus:ring-cyan-300"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -86,42 +91,8 @@ const Page = () => {
             view === "services" ? "opacity-100" : "opacity-0 h-0 overflow-hidden"
           }`}
         >
-          <h2 className="text-xl font-semibold text-white mb-4">Services</h2>
-          <div className="relative overflow-x-auto rounded-lg">
-            <table className="w-full text-sm text-left text-gray-700">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-300">
-                <tr>
-                  <th className="px-4 py-2">No</th>
-                  <th className="px-4 py-2">Name</th>
-                  <th className="px-4 py-2">Price</th>
-                  <th className="px-4 py-2">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredServices.length > 0 ? (
-                  filteredServices.map((service, index) => (
-                    <tr key={index} className="bg-white border-b hover:bg-gray-100">
-                      <td className="px-4 py-2">{index + 1}</td>
-                      <td className="px-4 py-2">{service.name}</td>
-                      <td className="px-4 py-2">{service.price}</td>
-                      <td className="px-4 py-2">
-                        {service.isAvailable ? "Available" : "Not Available"}
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td
-                      colSpan="4"
-                      className="px-4 py-2 text-center text-gray-500"
-                    >
-                      No services found.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+          <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-300 mb-4">Services</h2>
+          <ServiceTable filteredServices={filteredServices}/>
         </div>
 
         {/* Products Table */}
@@ -130,43 +101,8 @@ const Page = () => {
             view === "products" ? "opacity-100" : "opacity-0 h-0 overflow-hidden"
           }`}
         >
-          <h2 className="text-xl font-semibold text-white mb-4">Products</h2>
-          <div className="relative overflow-x-auto rounded-lg">
-            <table className="w-full text-sm text-left text-gray-700">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-300">
-                <tr>
-                  <th className="px-4 py-2">No</th>
-                  <th className="px-4 py-2">Name</th>
-                  <th className="px-4 py-2">Price</th>
-                  <th className="px-4 py-2">Quantity</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredProducts.length > 0 ? (
-                  filteredProducts.map((product, index) => (
-                    <tr
-                      key={index}
-                      className="bg-white border-b hover:bg-gray-100"
-                    >
-                      <td className="px-4 py-2">{index + 1}</td>
-                      <td className="px-4 py-2">{product.name}</td>
-                      <td className="px-4 py-2">{product.price}</td>
-                      <td className="px-4 py-2">{product.quantity}</td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td
-                      colSpan="4"
-                      className="px-4 py-2 text-center text-gray-500"
-                    >
-                      No products found.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+          <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-300-300 mb-4">Products</h2>
+          <ProductTable filteredProducts={filteredProducts}/>
         </div>
       </div>
     </div>

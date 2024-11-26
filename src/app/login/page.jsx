@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
-import { userLoginApi } from '../api/userApi';
+import { userLoginApi } from '../../api/userApi';
 import toast from 'react-hot-toast';
 import { userLogin } from '@/redux/slice/UserSlice';
 import Cookies from 'js-cookie';

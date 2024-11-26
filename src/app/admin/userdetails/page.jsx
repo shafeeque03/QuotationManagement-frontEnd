@@ -6,7 +6,7 @@ import {
   getUserDetails,
   updateUser,
   updatePassword,
-} from "../../api/adminApi.js";
+} from "../../../api/adminApi.js";
 import { useFormik } from "formik";
 import toast from "react-hot-toast";
 import {

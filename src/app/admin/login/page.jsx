@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { adminLoginVerify } from "../../api/adminApi.js";
+import { adminLoginVerify } from "../../../api/adminApi.js";
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useDispatch } from "react-redux";
@@ -28,7 +28,7 @@ const LoginPage = () => {
         });
         dispatch(adminLogin({ token: res?.data?.token, admin: res?.data?.admin }));
   
-        router.push('/admin/dashboard');
+        router.push('/admin');
       }
     } catch (error) {
       console.log(error.message);

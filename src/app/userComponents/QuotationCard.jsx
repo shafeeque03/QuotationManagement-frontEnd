@@ -1,35 +1,103 @@
-import React from 'react'
+import React from "react";
+import { 
+  CheckCircle, 
+  XCircle, 
+  Clock, 
+  FileText, 
+  Calendar, 
+  IndianRupee
+} from "lucide-react";
 
-const QuotationCard = () => {
-    const getStatusStyle = (status) => {
-        if (status === "Approved") return "bg-green-500/20 text-green-600";
-        if (status === "Rejected") return "bg-red-500/20 text-red-600";
-        return "bg-yellow-500/20 text-yellow-600";
-      };
+const QuotationCard = ({ value }) => {
+  const getStatusConfig = (status) => {
+    switch (status) {
+      case "accepted":
+        return {
+          icon: CheckCircle,
+          style: "bg-emerald-500/10 text-emerald-600 border border-emerald-500/30",
+          text: "Accepted"
+        };
+      case "rejected":
+        return {
+          icon: XCircle,
+          style: "bg-red-500/10 text-red-600 border border-red-500/30",
+          text: "Rejected"
+        };
+      default:
+        return {
+          icon: Clock,
+          style: "bg-amber-500/10 text-amber-600 border border-amber-500/30",
+          text: "Pending"
+        };
+    }
+  };
+
+  const statusConfig = getStatusConfig(value.status);
+  const StatusIcon = statusConfig.icon;
+
   return (
-    <div>
-        <div
-              key={1}
-              className="bg-white rounded-lg shadow-lg hover:scale-105 transform transition-all duration-300 p-6"
-            >
-              <p className="text-gray-500 text-sm">No: 1</p>
-              <h2 className="text-lg font-bold text-gray-800 mt-2">
-                Quotation #85858
-              </h2>
-              <p className="text-gray-700 mt-1">
-                <span className="font-medium">Expiry Date:</span>{" "}
-                31-03-2003
-              </p>
-              <div
-                className={`inline-block mt-3 px-4 py-2 rounded-full text-sm font-semibold ${getStatusStyle(
-                    'Approved'
-                )}`}
-              >
-                Approved
-              </div>
+    <div className="group perspective-1000 transform transition-all duration-300 hover:scale-[1.02]">
+      <div 
+        className="relative cursor-pointer"
+        onClick={() => window.location.href = `/quotation-details?qid=${value._id}`}
+      >
+        <div 
+          className="absolute -inset-0.5 shadow-xl 
+          rounded-2xl opacity-30 group-hover:opacity-40 blur-lg transition-all duration-300"
+        ></div>
+        
+        <div 
+          className="relative bg-white/80 backdrop-blur-xl border border-gray-100 
+          rounded-2xl p-6  overflow-hidden transition-all duration-300 
+          group-hover:space-y-4"
+        >
+          {/* Quotation Header */}
+          <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center space-x-3">
+              <FileText className="w-6 h-6 text-indigo-600"/>
+              <h3 className="text-lg font-bold bg-gradient-to-r from-indigo-600 to-purple-600 
+              text-transparent bg-clip-text">
+                Quotation #{value.quotationId}
+              </h3>
             </div>
-    </div>
-  )
-}
+            
+            <div 
+              className={`px-3 py-1 rounded-full text-xs font-medium flex items-center space-x-2 
+              ${statusConfig.style}`}
+            >
+              <StatusIcon className="w-4 h-4" />
+              <span>{statusConfig.text}</span>
+            </div>
+          </div>
 
-export default QuotationCard
+          {/* Quotation Details */}
+          <div className="space-y-3">
+            {/* Expiry Date */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2 text-gray-600">
+                <Calendar className="w-5 h-5 text-indigo-500"/>
+                <span className="text-sm">Expiry Date</span>
+              </div>
+              <span className="font-medium text-gray-800">
+                {new Date(value.expireDate).toLocaleDateString("en-GB")}
+              </span>
+            </div>
+
+            {/* Total Amount */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2 text-gray-600">
+                <IndianRupee className="w-5 h-5 text-green-500"/>
+                <span className="text-sm">Total Amount</span>
+              </div>
+              <span className="font-bold text-emerald-600">
+                ₹{value.totalAmount.toLocaleString()}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default QuotationCard;

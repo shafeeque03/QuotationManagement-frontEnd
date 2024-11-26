@@ -1,16 +1,17 @@
 import React, { useState } from "react";
-import { editProduct, editService } from "../api/adminApi";
+import { editProduct, editService } from "../../api/adminApi";
 import toast from "react-hot-toast";
 
 const EditProSer = ({ selectedItem, closeModal, updateItem  }) => {
   const [formData, setFormData] = useState({
     name: selectedItem?.name || "",
     price: selectedItem?.price || "",
-    quantity: selectedItem?.quantity || "", // Only for products
-    isAvailable: selectedItem?.isAvailable || false, // Only for services
+    quantity: selectedItem?.hasOwnProperty("quantity") ? selectedItem.quantity : "", // Only for products
+    isAvailable: selectedItem?.hasOwnProperty("isAvailable") ? selectedItem.isAvailable : false, // Only for services
   });
-
-  const isProduct = !!selectedItem?.quantity; // Check if selectedItem is a product
+  
+  const isProduct = selectedItem?.hasOwnProperty("quantity"); // Explicitly check for the 'quantity' field
+  // Check if selectedItem is a product
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -74,7 +75,7 @@ const EditProSer = ({ selectedItem, closeModal, updateItem  }) => {
           </svg>
         </button>
 
-        <h2 className="text-lg sm:text-xl text-gray-800 font-semibold mb-4">
+        <h2 className="text-lg sm:text-xl text-indigo-700 font-semibold mb-4">
           Edit {isProduct ? "Product" : "Service"}
         </h2>
 
@@ -152,7 +153,7 @@ const EditProSer = ({ selectedItem, closeModal, updateItem  }) => {
 
           <button
             type="submit"
-            className="w-full bg-red-700 text-white py-2 rounded-lg hover:bg-red-800"
+            className="w-full bg-indigo-700 text-white py-2 rounded-lg hover:bg-indigo-800"
           >
             Save Changes
           </button>

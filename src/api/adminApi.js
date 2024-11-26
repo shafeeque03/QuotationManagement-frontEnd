@@ -11,10 +11,15 @@ export const addUser = async (values)=>{
     return data
 }
 
-export const getUser = async()=>{
-    const data = await adminAxiosInstance.get('/getUser');
-    return data
-}
+export const getUser = async (page, limit, search) => {
+    const data = await adminAxiosInstance.get(
+      `/getUser?page=${page}&limit=${limit}&search=${search}`
+    );
+    return data;
+  };
+  
+  
+  
 
 export const getUserDetails = async(userId)=>{
     const data = await adminAxiosInstance.get(`userDetails/${userId}`);
@@ -61,4 +66,36 @@ export const editProduct = async(productId,value)=>{
 export const editService = async(serviceId,value)=>{
     const data = await adminAxiosInstance.patch('/editService',{serviceId,value});
     return data    
+}
+
+export const getClinets =  async (page, limit, search) => {
+    const data = await adminAxiosInstance.get(
+      `/getClients?page=${page}&limit=${limit}&search=${search}`
+    );
+    return data;
+  };
+
+  export const filteredQuotation = async ({ searchTerm, startDate, endDate, sortBy, sortOrder, page, limit }) => {
+    const params = {
+      searchTerm,
+      startDate,
+      endDate,
+      sortBy,
+      sortOrder,
+      page,
+      limit,
+    };
+  
+    const response = await adminAxiosInstance.get("/filteredQuotation", { params });
+    return response.data;
+  };
+
+export const getAllUsers = async()=>{
+    const data = await adminAxiosInstance.get('/getAllUsers');
+    return data
+}
+
+export const getAllClients = async()=>{
+    const data = await adminAxiosInstance.get('/getAllClients');
+    return data
 }

@@ -1,24 +1,24 @@
-import { persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
-import { persistStore } from 'redux-persist';
-import userReducer from './slice/UserSlice';
 import { configureStore } from '@reduxjs/toolkit';
 import { combineReducers } from '@reduxjs/toolkit';
+import cookies from 'js-cookie';
+import userReducer from './slice/UserSlice';
+import adminReducer from './slice/AdminSlice'
 
-// Persist configuration
-const persistConfig = { key: 'root', storage, version: 1 };
-
-// Combine reducers with the correct key
 const reducer = combineReducers({
-  user: userReducer, // The key is now "user"
+  user: userReducer,
+  admin: adminReducer,
 });
 
-// Persisted reducer
-const persistedReducer = persistReducer(persistConfig, reducer);
+const loadStateFromCookies = () => {
+  const savedState = cookies.get('reduxState');
+  return savedState ? JSON.parse(savedState) : undefined;
+};
 
-// Store configuration
+const preloadedState = loadStateFromCookies();
+
 const store = configureStore({
-  reducer: persistedReducer,
+  reducer,
+  preloadedState,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
@@ -27,7 +27,9 @@ const store = configureStore({
     }),
 });
 
-// Persistor
-const persistor = persistStore(store);
+store.subscribe(() => {
+  const state = store.getState();
+  cookies.set('reduxState', JSON.stringify(state), { expires: 7 });
+});
 
-export { store, persistor };
+export default store;
