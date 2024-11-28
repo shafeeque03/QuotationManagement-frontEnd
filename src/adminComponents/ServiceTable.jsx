@@ -1,5 +1,5 @@
 import React from 'react'
-import DownloadButton from "@/app/adminComponents/DownloadProAndSer.jsx";
+import DownloadButton from "@/adminComponents/DownloadProAndSer.jsx";
 
 
 const ServiceTable = ({view,services,filteredServices,openEditModal}) => {

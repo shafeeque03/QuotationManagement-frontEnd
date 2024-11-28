@@ -3,10 +3,12 @@ import { combineReducers } from '@reduxjs/toolkit';
 import cookies from 'js-cookie';
 import userReducer from './slice/UserSlice';
 import adminReducer from './slice/AdminSlice'
+import hosterReducer from './slice/HosterSlice'
 
 const reducer = combineReducers({
   user: userReducer,
   admin: adminReducer,
+  hoster: hosterReducer
 });
 
 const loadStateFromCookies = () => {

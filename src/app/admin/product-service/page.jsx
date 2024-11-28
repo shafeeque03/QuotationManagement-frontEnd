@@ -1,11 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Sidebar from "../../adminComponents/Sidebar.jsx";
+import Sidebar from "../../../adminComponents/Sidebar.jsx";
 import { addProduct, addService, getProAndSer } from "../../../api/adminApi.js";
 import toast from "react-hot-toast";
-import EditProSer from "@/app/adminComponents/EditProSer.jsx";
-import ProductTable from "@/app/adminComponents/ProductTable.jsx";
-import AddProSerForm from "@/app/adminComponents/AddProSerForm.jsx";
+import EditProSer from "@/adminComponents/EditProSer.jsx";
+import ProductTable from "@/adminComponents/ProductTable.jsx";
+import AddProSerForm from "@/adminComponents/AddProSerForm.jsx";
 
 const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

@@ -1,6 +1,6 @@
 //layout.
 import { Provider } from 'react-redux';
-import './globals.css';
+import '../globals.css'
 import Providers from '../commonComponents/Provider.jsx';
 export const metadata = {
   title: 'Quotation Management',

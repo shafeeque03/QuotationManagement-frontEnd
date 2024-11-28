@@ -1,9 +1,9 @@
 "use client"
 import React, { useState, useEffect } from "react";
-import { UserMenu } from "../userComponents/UserMenu";
+import { UserMenu } from "../../userComponents/UserMenu";
 import { getProAndSer } from "../../api/adminApi";
-import ProductTable from "../userComponents/ProductTable";
-import ServiceTable from "../userComponents/ServiceTable";
+import ProductTable from "../../userComponents/ProductTable";
+import ServiceTable from "../../userComponents/ServiceTable";
 
 const Page = () => {
   const [products, setProducts] = useState([]);

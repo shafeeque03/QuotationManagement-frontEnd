@@ -1,9 +1,9 @@
 "use client";
 
-import { UserMenu } from "@/app/userComponents/UserMenu";
+import { UserMenu } from "@/userComponents/UserMenu";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import QuotationCard from "./userComponents/QuotationCard";
+import QuotationCard from "../userComponents/QuotationCard";
 import { filteredData } from "../api/userApi";
 import { useSelector } from "react-redux";
 import Pagination from "@/commonComponents/Pagination";

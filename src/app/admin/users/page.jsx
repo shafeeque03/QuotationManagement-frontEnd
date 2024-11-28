@@ -1,15 +1,16 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Sidebar from "../../adminComponents/Sidebar.jsx";
+import Sidebar from "../../../adminComponents/Sidebar.jsx";
 import { useFormik } from "formik";
 import { userValidation } from "../../../Validation/UserValidation.jsx";
 import toast from "react-hot-toast";
 import Pagination from "../../../commonComponents/Pagination.jsx";
-import DownloadUsersPDFButton from "@/app/adminComponents/DownloadUsersPDFButton.jsx";
+import DownloadUsersPDFButton from "@/adminComponents/DownloadUsersPDFButton.jsx";
 import { addUser, getUser } from "@/api/adminApi.js";
 import useDebounce from "@/hook/useDebounce.jsx";
-import UserListTable from "@/app/adminComponents/UserListTable.jsx";
+import UserListTable from "@/adminComponents/UserListTable.jsx";
 import { UserPlus, X, Download, Loader2 } from "lucide-react";
+import { useSelector } from "react-redux";
 
 const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,7 +20,10 @@ const Page = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
-  const usersPerPage = 2;
+  const state = useSelector((state) => state);
+  const admin = state?.admin?.admin;
+  const admin_id = admin?._id
+  const usersPerPage = 1;
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -36,7 +40,7 @@ const Page = () => {
   const fetchUsers = async (page = 1, limit = usersPerPage, searchQuery = "") => {
     setIsLoading(true);
     try {
-      const res = await getUser(page, limit, searchQuery);
+      const res = await getUser(page, limit, searchQuery,admin_id);
       const { users, currentPage, totalPagess } = res.data;
       setAllUsers(users);
       setCurrentPage(currentPage);
@@ -56,7 +60,7 @@ const Page = () => {
 
   const onSubmit = async () => {
     try {
-      const res = await addUser(values);
+      const res = await addUser(values,admin);
       if (res?.status === 201) {
         toast.success("User added successfully!");
         fetchUsers();
@@ -68,28 +72,12 @@ const Page = () => {
     }
   };
 
-  const { values, handleBlur, handleChange, handleSubmit, errors } = useFormik({
+  const { values, handleBlur, handleChange, handleSubmit, errors,touched } = useFormik({
     initialValues,
     validationSchema: userValidation,
     onSubmit,
   });
 
-  const InputField = ({ label, id, type = "text", ...props }) => (
-    <div className="mb-4">
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700">
-        {label}
-      </label>
-      <input
-        type={type}
-        id={id}
-        className="mt-1 p-2.5 w-full border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white/50 backdrop-blur-sm transition-all duration-200"
-        {...props}
-      />
-      {errors[id] && (
-        <p className="text-red-500 text-sm mt-1">{errors[id]}</p>
-      )}
-    </div>
-  );
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-50">
@@ -136,88 +124,159 @@ const Page = () => {
 
         {/* Modal */}
         {isModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-50">
-            <div className="bg-white w-full max-w-md mx-4 p-6 rounded-2xl shadow-xl relative transform transition-all duration-300">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-transparent bg-clip-text">
-                  Add New User
-                </h2>
-                <button
-                  onClick={closeModal}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
-                >
-                  <X className="h-5 w-5 text-gray-500" />
-                </button>
-              </div>
+  <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
+    <div className="bg-white w-full max-w-md mx-4 p-6 rounded-3xl shadow-xl relative transform transition-all duration-300">
+      {/* Modal Header */}
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 text-transparent bg-clip-text">
+          Add New User
+        </h2>
+        <button
+          onClick={closeModal}
+          className="p-2 hover:bg-gray-200 rounded-full transition-colors duration-200"
+        >
+          <X className="h-6 w-6 text-gray-600" />
+        </button>
+      </div>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <InputField
-                  label="User Name"
-                  id="userName"
-                  name="userName"
-                  value={values.userName}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
-                <InputField
-                  label="Email"
-                  id="email"
-                  type="email"
-                  name="email"
-                  value={values.email}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
-                <InputField
-                  label="Phone"
-                  id="phone"
-                  type="number"
-                  name="phone"
-                  value={values.phone}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
-                <InputField
-                  label="Login ID"
-                  id="loginId"
-                  name="loginId"
-                  value={values.loginId}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
-                <InputField
-                  label="Password"
-                  id="password"
-                  type="password"
-                  name="password"
-                  value={values.password}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
-                <InputField
-                  label="Confirm Password"
-                  id="cPassword"
-                  type="password"
-                  name="cPassword"
-                  value={values.cPassword}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {/* User Name Field */}
+        <div>
+          <label htmlFor="userName" className="block text-sm font-medium text-gray-700">
+            User Name
+          </label>
+          <input
+            type="text"
+            id="userName"
+            name="userName"
+            value={values.userName}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            placeholder="Enter user's name"
+            className="mt-1 w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm"
+          />
+          {errors.userName && touched.userName && (
+            <p className="text-red-500 text-xs mt-1">{errors.userName}</p>
+          )}
+        </div>
 
-                <button
-                  type="submit"
-                  className="w-full py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white hover:opacity-90 transition-all duration-200 shadow-lg shadow-indigo-200"
-                >
-                  {isLoading ? (
-                    <Loader2 className="h-5 w-5 animate-spin mx-auto" />
-                  ) : (
-                    "Add User"
-                  )}
-                </button>
-              </form>
-            </div>
-          </div>
-        )}
+        {/* Email Field */}
+        <div>
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={values.email}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            placeholder="Enter user's email"
+            className="mt-1 w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm"
+          />
+          {errors.email && touched.email && (
+            <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+          )}
+        </div>
+
+        {/* Phone Field */}
+        <div>
+          <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+            Phone
+          </label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            value={values.phone}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            placeholder="Enter phone number"
+            className="mt-1 w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm"
+          />
+          {errors.phone && touched.phone && (
+            <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
+          )}
+        </div>
+
+        {/* Login ID Field */}
+        <div>
+          <label htmlFor="loginId" className="block text-sm font-medium text-gray-700">
+            Login ID
+          </label>
+          <input
+            type="text"
+            id="loginId"
+            name="loginId"
+            value={values.loginId}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            placeholder="Enter login ID"
+            className="mt-1 w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm"
+          />
+          {errors.loginId && touched.loginId && (
+            <p className="text-red-500 text-xs mt-1">{errors.loginId}</p>
+          )}
+        </div>
+
+        {/* Password Field */}
+        <div>
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            Password
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={values.password}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            placeholder="Enter password"
+            className="mt-1 w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm"
+          />
+          {errors.password && touched.password && (
+            <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+          )}
+        </div>
+
+        {/* Confirm Password Field */}
+        <div>
+          <label htmlFor="cPassword" className="block text-sm font-medium text-gray-700">
+            Confirm Password
+          </label>
+          <input
+            type="password"
+            id="cPassword"
+            name="cPassword"
+            value={values.cPassword}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            placeholder="Re-enter password"
+            className="mt-1 w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm"
+          />
+          {errors.cPassword && touched.cPassword && (
+            <p className="text-red-500 text-xs mt-1">{errors.cPassword}</p>
+          )}
+        </div>
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          className="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:opacity-90 transition-all duration-200 shadow-lg hover:shadow-xl"
+        >
+          {isLoading ? (
+            <Loader2 className="h-5 w-5 animate-spin mx-auto" />
+          ) : (
+            "Add User"
+          )}
+        </button>
+      </form>
+    </div>
+  </div>
+)}
+
 
         {/* Content Area */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">

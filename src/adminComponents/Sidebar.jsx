@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 import { usePathname } from "next/navigation";
 import { 
   LayoutDashboard, 
@@ -9,12 +10,25 @@ import {
   Package, 
   ChevronLeft,
   Menu,
-  Boxes
+  Boxes,
+  LogOut // Added LogOut icon
 } from "lucide-react";
+import Cookies from 'js-cookie';
+import { adminLogout } from "@/redux/slice/AdminSlice";
+import { useDispatch } from "react-redux";
+
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    Cookies.remove('adminToken');
+    dispatch(adminLogout());
+    router.push('/admin/login');
+  };
 
   const menuItems = [
     { path: "/admin", icon: LayoutDashboard, label: "Dashboard" },
@@ -38,12 +52,13 @@ const Sidebar = () => {
 
       {/* Sidebar */}
       <div
-        className={`fixed min-h-screen top-0 left-0 z-50 w-72 h-screen overflow-y-auto 
-        bg-gradient-to-b from-gray-50 to-white border-r border-gray-100
-        shadow-xl transition-all duration-300 ease-in-out transform
-        ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
-        md:relative md:w-72 md:shadow-none`}
-      >
+  className={`fixed top-0 left-0 z-50 w-72 h-screen overflow-y-auto 
+  bg-gradient-to-b from-gray-50 to-white border-r border-gray-100
+  shadow-xl transition-transform duration-300 ease-in-out transform
+  ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+  md:relative md:translate-x-0 md:shadow-none`}
+>
+
         {/* Header */}
         <div className="relative flex items-center justify-between p-6">
           <div className="flex items-center gap-2">
@@ -63,8 +78,8 @@ const Sidebar = () => {
         </div>
 
         {/* Navigation */}
-        <nav className="px-4 pb-6">
-          <div className="space-y-2">
+        <nav className="px-4 pb-6 flex flex-col h-[calc(100vh-120px)]">
+          <div className="space-y-2 flex-grow">
             {menuItems.map((item) => {
               const isActive = pathname === item.path;
               return (
@@ -91,6 +106,21 @@ const Sidebar = () => {
                 </Link>
               );
             })}
+          </div>
+
+          {/* Logout Button */}
+          <div className="mt-auto px-2 pb-4">
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl 
+              text-gray-600 hover:bg-red-50 hover:text-red-600 
+              transition-all duration-200 group"
+            >
+              <LogOut className="w-5 h-5 text-gray-500 group-hover:text-red-500" />
+              <span className="font-medium group-hover:text-red-600">
+                Logout
+              </span>
+            </button>
           </div>
         </nav>
       </div>

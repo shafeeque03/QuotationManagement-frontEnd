@@ -1,10 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { UserMenu } from "../userComponents/UserMenu";
+import { UserMenu } from "../../userComponents/UserMenu";
 import { useSearchParams } from "next/navigation";
 import { quotationDetails, quotationStatusChange } from "../../api/userApi";
 import toast from "react-hot-toast";
-import DownloadQuotationPDF from "../userComponents/DownloadQuotationPDF";
+import DownloadQuotationPDF from "../../userComponents/DownloadQuotationPDF";
 
 const Page = () => {
   const [quotation, setQuotation] = useState(null);

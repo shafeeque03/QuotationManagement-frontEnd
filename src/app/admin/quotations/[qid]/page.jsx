@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { quotationDetails } from "@/api/userApi";
-import Sidebar from "@/app/adminComponents/Sidebar";
+import Sidebar from "@/adminComponents/Sidebar";
 import toast from "react-hot-toast";
-import DownloadQuotation from "@/app/adminComponents/DownloadQuotation";
+import DownloadQuotation from "@/adminComponents/DownloadQuotation";
 import { 
   FileTextIcon, 
   UserIcon, 

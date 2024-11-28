@@ -5,8 +5,8 @@ import Pagination from "@/commonComponents/Pagination";
 import useDebounce from "@/hook/useDebounce";
 import { Search, Calendar, SortDesc, Eye } from "lucide-react";
 import { filteredQuotation } from "@/api/adminApi";
-import Sidebar from "@/app/adminComponents/Sidebar";
-import DownloadQuotationsPDF from "@/app/adminComponents/DownloadQuotationsPDF";
+import Sidebar from "@/adminComponents/Sidebar";
+import DownloadQuotationsPDF from "@/adminComponents/DownloadQuotationsPDF";
 
 
 const QuotationsTable = () => {

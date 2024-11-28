@@ -1,6 +1,6 @@
 "use client";
 import { useSearchParams } from "next/navigation.js";
-import Sidebar from "../../adminComponents/Sidebar.jsx";
+import Sidebar from "../../../adminComponents/Sidebar.jsx";
 import React, { useState, useEffect } from "react";
 import {
   getUserDetails,

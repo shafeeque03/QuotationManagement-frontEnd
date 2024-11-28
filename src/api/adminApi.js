@@ -1,24 +1,21 @@
 import { adminAxiosInstance } from "./axiosInstance";
 
 export const adminLoginVerify = async (id,password)=>{
-    console.log("heyyy")
     const data = await adminAxiosInstance.post('/login',{id,password});
     return data
 }
 
-export const addUser = async (values)=>{
-    const data = await adminAxiosInstance.post('/addUser',{...values});
+export const addUser = async (values,admin)=>{
+    const data = await adminAxiosInstance.post('/addUser',{...values,admin});
     return data
 }
 
-export const getUser = async (page, limit, search) => {
+export const getUser = async (page, limit, search,admin_id) => {
     const data = await adminAxiosInstance.get(
-      `/getUser?page=${page}&limit=${limit}&search=${search}`
+      `/getUser?page=${page}&limit=${limit}&search=${search}&adminId=${admin_id}`
     );
     return data;
   };
-  
-  
   
 
 export const getUserDetails = async(userId)=>{
@@ -42,7 +39,6 @@ export const updatePassword = async(userId,password)=>{
 }
 
 export const addProduct = async(formdata)=>{
-    console.log(formdata,"ivide working")
     const data = await adminAxiosInstance.post('/addProduct',{formdata});
     return data
 }
@@ -58,7 +54,6 @@ export const getProAndSer = async()=>{
 }
 
 export const editProduct = async(productId,value)=>{
-    console.log(productId,"okokokoko")
     const data = await adminAxiosInstance.patch('/editProduct',{productId,value});
     return data
 }

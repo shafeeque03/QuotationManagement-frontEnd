@@ -1,11 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Sidebar from "../../adminComponents/Sidebar.jsx";
+import Sidebar from "../../../adminComponents/Sidebar.jsx";
 import Pagination from "../../../commonComponents/Pagination.jsx";
 import {getClinets } from "@/api/adminApi.js";
 import useDebounce from "@/hook/useDebounce.jsx";
-import ClientListTable from "@/app/adminComponents/ClientListTable.jsx";
-import DownloadClientsPDF from "@/app/adminComponents/DownloadClientsPDF.jsx";
+import ClientListTable from "@/adminComponents/ClientListTable.jsx";
+import DownloadClientsPDF from "@/adminComponents/DownloadClientsPDF.jsx";
 
 const Page = () => {
   const [allUsers, setAllUsers] = useState([]);

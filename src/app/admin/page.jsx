@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { Line } from 'react-chartjs-2'; // Importing chart.js for the graph
 import { Chart as ChartJS } from 'chart.js/auto';
 import { adminLogout } from '@/redux/slice/AdminSlice.jsx';
-import Sidebar from '../adminComponents/Sidebar';
+import Sidebar from '../../adminComponents/Sidebar';
 
 const page = () => {
   const router = useRouter();
@@ -34,49 +34,52 @@ const page = () => {
 
   return (
     <div className="md:flex">
-      <Sidebar />
-      <div className="w-full bg-blue-600 p-5">
-        <div className="w-full">
-          <h1 className="font-xl text-white text-4xl mt-3 text-center">
-            Welcome to Dashboard
-          </h1>
-          <h1
-            className="text-black text-2xl text-center mt-4 cursor-pointer"
-            onClick={handleLogout}
-          >
-            Logout
-          </h1>
-        </div>
+  {/* Sidebar */}
+  <Sidebar />
 
-        {/* Box Grid for small data */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8 text-black">
-          <div className="bg-white p-5 rounded-lg shadow-md">
-            <h2 className="text-lg font-semibold text-gray-600">Total Quotations</h2>
-            <p className="text-2xl font-bold text-gray-800">1,250</p>
-          </div>
-          <div className="bg-white p-5 rounded-lg shadow-md text-gray-600">
-            <h2 className="text-lg font-semibold">Total Users</h2>
-            <p className="text-2xl font-bold text-gray-800">1,230</p>
-          </div>
-          <div className="bg-white p-5 rounded-lg shadow-md text-gray-600">
-            <h2 className="text-lg font-semibold">Total Clients</h2>
-            <p className="text-2xl font-bold text-gray-800">40</p>
-          </div>
-          <div className="bg-white p-5 rounded-lg shadow-md text-gray-600">
-            <h2 className="text-lg font-semibold">New Customers</h2>
-            <p className="text-2xl font-bold text-gray-800">150</p>
-          </div>
-        </div>
+  {/* Main Content */}
+  <div className="flex-1 md:ml-72 bg-blue-600 p-5">
+    <div className="w-full">
+      <h1 className="font-xl text-white text-4xl mt-3 text-center">
+        Welcome to Dashboard
+      </h1>
+      <h1
+        className="text-black text-2xl text-center mt-4 cursor-pointer"
+        onClick={handleLogout}
+      >
+        Logout
+      </h1>
+    </div>
 
-        {/* Graph Section */}
-        <div className="mt-8 bg-white p-5 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold">User Growth Over Time</h2>
-          <div className="mt-4">
-            <Line data={data} />
-          </div>
-        </div>
+    {/* Box Grid */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8 text-black">
+      <div className="bg-white p-5 rounded-lg shadow-md">
+        <h2 className="text-lg font-semibold text-gray-600">Total Quotations</h2>
+        <p className="text-2xl font-bold text-gray-800">1,250</p>
+      </div>
+      <div className="bg-white p-5 rounded-lg shadow-md text-gray-600">
+        <h2 className="text-lg font-semibold">Total Users</h2>
+        <p className="text-2xl font-bold text-gray-800">1,230</p>
+      </div>
+      <div className="bg-white p-5 rounded-lg shadow-md text-gray-600">
+        <h2 className="text-lg font-semibold">Total Clients</h2>
+        <p className="text-2xl font-bold text-gray-800">40</p>
+      </div>
+      <div className="bg-white p-5 rounded-lg shadow-md text-gray-600">
+        <h2 className="text-lg font-semibold">New Customers</h2>
+        <p className="text-2xl font-bold text-gray-800">150</p>
       </div>
     </div>
+
+    {/* Graph Section */}
+    <div className="mt-8 bg-white p-5 rounded-lg shadow-md">
+      <h2 className="text-xl font-semibold">User Growth Over Time</h2>
+      <div className="mt-4">
+        <Line data={data} />
+      </div>
+    </div>
+  </div>
+</div>
   );
 };
 
