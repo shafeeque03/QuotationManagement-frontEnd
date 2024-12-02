@@ -6,6 +6,7 @@ import {getClinets } from "@/api/adminApi.js";
 import useDebounce from "@/hook/useDebounce.jsx";
 import ClientListTable from "@/adminComponents/ClientListTable.jsx";
 import DownloadClientsPDF from "@/adminComponents/DownloadClientsPDF.jsx";
+import { useSelector } from "react-redux";
 
 const Page = () => {
   const [allUsers, setAllUsers] = useState([]);
@@ -14,12 +15,16 @@ const Page = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
-  const usersPerPage = 2;
+  const state = useSelector((state) => state);
+  const admin = state?.admin?.admin;
+  const adminId = admin?._id;
+
+  const usersPerPage = 1;
 
   const fetchUsers = async (page = 1, limit = usersPerPage, searchQuery = "") => {
     setIsLoading(true);
     try {
-      const res = await getClinets(page, limit, searchQuery);
+      const res = await getClinets(page, limit, searchQuery,adminId);
       const { users, currentPage, totalPagess } = res.data;
       setAllUsers(users);
       setCurrentPage(currentPage);
@@ -64,7 +69,7 @@ const Page = () => {
 
           {/* Buttons */}
           <div className="md:col-span-2 flex justify-end gap-3">
-          <DownloadClientsPDF/>
+          <DownloadClientsPDF adminId={adminId}/>
           </div>
         </div>
 

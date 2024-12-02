@@ -1,9 +1,9 @@
-"use client"
+"use client";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Menu, X, User, LogOut, Home, Package } from 'lucide-react';
+import { Menu, X, User, LogOut, Home, Package, Settings } from 'lucide-react';
 import Cookies from 'js-cookie';
 import { userLogout } from "@/redux/slice/UserSlice";
 
@@ -19,6 +19,7 @@ export const UserMenu = () => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    // Check if we are on the client side
     setIsClient(true);
   }, []);
 
@@ -46,7 +47,7 @@ export const UserMenu = () => {
   );
 
   if (!isClient || !user) {
-    return null;
+    return null; // Prevent rendering during SSR or if user is not available
   }
 
   return (
@@ -55,12 +56,11 @@ export const UserMenu = () => {
         <div className="flex justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <Link 
-              href="/" 
+            <div 
               className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600"
             >
               QMS
-            </Link>
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
@@ -79,9 +79,13 @@ export const UserMenu = () => {
               <Home size={20} />
               Quotations
             </NavLink>
-            <NavLink href="/proandser">
+            <NavLink href="/products">
               <Package size={20} />
-              Products/Services
+              Products
+            </NavLink>
+            <NavLink href="/services">
+              <Settings size={20} />
+              Services
             </NavLink>
 
             {/* Profile Dropdown */}
@@ -119,9 +123,13 @@ export const UserMenu = () => {
                 <Home size={20} />
                 Quotations
               </NavLink>
-              <NavLink href="/proandser">
+              <NavLink href="/products">
                 <Package size={20} />
-                Products/Services
+                Products
+              </NavLink>
+              <NavLink href="/services">
+                <Settings size={20} />
+                Services
               </NavLink>
             </div>
             <div className="pt-4 pb-3 border-t border-gray-200">

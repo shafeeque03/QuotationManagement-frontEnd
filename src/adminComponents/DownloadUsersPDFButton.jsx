@@ -4,10 +4,10 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-const DownloadUsersPDFButton = ({fileName = "Users"}) => {
+const DownloadUsersPDFButton = ({fileName = "Users",adminId}) => {
   const [users,setUsers] = useState([])
   useEffect(()=>{
-    getAllUsers().then((res)=>{
+    getAllUsers(adminId).then((res)=>{
       setUsers(res?.data?.users)
     }).catch((err)=>{
       toast.error(err.message);

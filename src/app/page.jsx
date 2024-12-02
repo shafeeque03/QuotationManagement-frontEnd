@@ -21,7 +21,7 @@ const Quotations = () => {
   const [endDate, setEndDate] = useState("");
   const [totalPages, setTotalPages] = useState(1);
 
-  const ITEMS_PER_PAGE = 10;
+  const ITEMS_PER_PAGE = 1;
 
   const state = useSelector((state) => state);
   const user = state?.user?.user;

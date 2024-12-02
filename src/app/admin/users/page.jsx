@@ -41,10 +41,9 @@ const Page = () => {
     setIsLoading(true);
     try {
       const res = await getUser(page, limit, searchQuery,admin_id);
-      const { users, currentPage, totalPagess } = res.data;
-      setAllUsers(users);
-      setCurrentPage(currentPage);
-      setTotalPages(totalPagess);
+      setAllUsers(res.data.users);
+      setCurrentPage(res.data.currentPage);
+      setTotalPages(res.data.totalPages);
     } catch (err) {
       console.error(err.message);
     } finally {
@@ -52,7 +51,17 @@ const Page = () => {
     }
   };
 
+  console.log(currentPage,totalPages,"heyyy")
+
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
+
+  useEffect(() => {
+    if (searchQuery === "") {
+      setCurrentPage(1);
+    } else {
+      setCurrentPage(1);
+    }
+  }, [searchQuery]);
 
   useEffect(() => {
     fetchUsers(currentPage, usersPerPage, debouncedSearchQuery);
@@ -115,6 +124,7 @@ const Page = () => {
             
             <DownloadUsersPDFButton
               fileName="Users_Report"
+              adminId={admin_id}
             >
               <Download className="h-5 w-5" />
               <span>Download PDF</span>
@@ -281,7 +291,8 @@ const Page = () => {
         {/* Content Area */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           <UserListTable 
-            allUsers={allUsers} 
+            allUsers={allUsers}
+            setAllUsers={setAllUsers}
             isLoading={isLoading} 
             currentPage={currentPage} 
             usersPerPage={usersPerPage}
@@ -293,7 +304,7 @@ const Page = () => {
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            onPageChange={(page) => fetchUsers(page)}
+            onPageChange={(page) => setCurrentPage(page)}
           />
         </div>
       </div>

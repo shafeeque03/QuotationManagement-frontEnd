@@ -1,8 +1,10 @@
 "use client";
 import React from "react";
 import { Phone, Mail, MoreHorizontal, UserRoundCog } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const AdminCard = ({ value }) => {
+  const router = useRouter();
   return (
     <div className="w-full max-w-md mx-auto">
       <div className="bg-white rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 hover:scale-[1.02] hover:shadow-3xl">
@@ -61,12 +63,14 @@ const AdminCard = ({ value }) => {
             hover:from-blue-700 hover:to-purple-800 
             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
             transition-all duration-300 ease-in-out
-            transform hover:-translate-y-0.5 active:translate-y-0.5">
+            transform hover:-translate-y-0.5 active:translate-y-0.5"
+            onClick={() => router.push(`/hoster/${value._id}`)}
+            >
             <MoreHorizontal 
               className="transition-transform duration-300 group-hover:rotate-90" 
-              size={24} 
+              size={24}
             />
-            <span>View Full Profile</span>
+            <span>View Full Profiles</span>
           </button>
         </div>
       </div>

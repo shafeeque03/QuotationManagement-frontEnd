@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import toast from 'react-hot-toast';
 
 export function middleware(req) {
   const userToken = req.cookies.get('userToken')?.value || null;
@@ -14,7 +13,11 @@ export function middleware(req) {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
-  if (requestedPath === '/proandser' && !userToken) {
+  if (requestedPath === '/products' && !userToken) {
+    return NextResponse.redirect(new URL('/login', req.url));
+  }
+
+  if (requestedPath === '/services' && !userToken) {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
@@ -28,14 +31,25 @@ export function middleware(req) {
 
 
 //admin protect
-  if (requestedPath ==='/admin' && !adminToken) {
+  if (
+    requestedPath.startsWith('/admin') && 
+    !requestedPath.includes('/admin/login') && 
+    !adminToken
+  ) {
     return NextResponse.redirect(new URL('/admin/login', req.url));
   }
 
+
   //developer protect
-  if (requestedPath ==='/hoster' && !hosterToken) {
-    return NextResponse.redirect(new URL('/hoster/login', req.url));
+  if (
+    requestedPath.startsWith('/hoster') && 
+    !requestedPath.includes('/hoster/login') && 
+    !adminToken
+  ) {
+    return NextResponse.redirect(new URL('/admin/login', req.url));
   }
+  
+
 
   return NextResponse.next();
 }

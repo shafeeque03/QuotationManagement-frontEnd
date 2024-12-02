@@ -1,23 +1,16 @@
-"use client"; 
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
+"use client"
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { Line } from 'react-chartjs-2'; // Importing chart.js for the graph
+import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS } from 'chart.js/auto';
-import { adminLogout } from '@/redux/slice/AdminSlice.jsx';
+import { 
+  Users, 
+  FileText, 
+  Settings,
+  Box
+} from 'lucide-react';
 import Sidebar from '../../adminComponents/Sidebar';
 
-const page = () => {
-  const router = useRouter();
-  const dispatch = useDispatch();
-  
-  const handleLogout = () => {
-    Cookies.remove('adminToken');
-    dispatch(adminLogout());
-    router.push('/admin/login');
-  };
-
+const Dashboard = () => {
   // Dummy data for the graph
   const data = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
@@ -26,61 +19,102 @@ const page = () => {
         label: 'Users Growth',
         data: [65, 59, 80, 81, 56, 55],
         fill: false,
-        borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1
+        borderColor: '#3b82f6',
+        backgroundColor: '#3b82f6',
+        borderWidth: 2,
+        pointRadius: 5,
+        pointBackgroundColor: '#3b82f6',
+        tension: 0.4
       }
     ]
   };
 
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top'
+      },
+      title: {
+        display: false
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: '#f3f4f6'
+        }
+      },
+      x: {
+        grid: {
+          color: '#f3f4f6'
+        }
+      }
+    }
+  };
+
+  const statsCards = [
+    {
+      icon: FileText,
+      title: 'Total Quotations',
+      value: '1,250',
+      color: 'text-blue-600'
+    },
+    {
+      icon: Users,
+      title: 'Total Users',
+      value: '1,230',
+      color: 'text-green-600'
+    },
+    {
+      icon: Box,
+      title: 'Total Products',
+      value: '40',
+      color: 'text-purple-600'
+    },
+    {
+      icon: Settings,
+      title: 'Total Services',
+      value: '150',
+      color: 'text-orange-600'
+    }
+  ];
+
   return (
-    <div className="md:flex">
-  {/* Sidebar */}
-  <Sidebar />
+    <div className="min-h-screen bg-gray-50 flex">
+      <Sidebar />
+      <main className="flex-grow p-6 lg:p-8 space-y-8">
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {statsCards.map((card, index) => (
+            <div 
+              key={index} 
+              className="bg-white rounded-xl shadow-md p-6 border border-gray-100 transition-all duration-300 hover:shadow-lg hover:scale-105"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <card.icon className={`w-10 h-10 ${card.color}`} />
+                <span className="text-sm text-gray-500 font-medium">{card.title}</span>
+              </div>
+              <p className="text-3xl font-bold text-gray-800">{card.value}</p>
+            </div>
+          ))}
+        </div>
 
-  {/* Main Content */}
-  <div className="flex-1 md:ml-72 bg-blue-600 p-5">
-    <div className="w-full">
-      <h1 className="font-xl text-white text-4xl mt-3 text-center">
-        Welcome to Dashboard
-      </h1>
-      <h1
-        className="text-black text-2xl text-center mt-4 cursor-pointer"
-        onClick={handleLogout}
-      >
-        Logout
-      </h1>
+        {/* Graph Section */}
+        <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold text-gray-800">User Growth</h2>
+            <span className="text-sm text-gray-500">Last 6 Months</span>
+          </div>
+          <div className="h-[350px]">
+            <Line data={data} options={options} />
+          </div>
+        </div>
+      </main>
     </div>
-
-    {/* Box Grid */}
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8 text-black">
-      <div className="bg-white p-5 rounded-lg shadow-md">
-        <h2 className="text-lg font-semibold text-gray-600">Total Quotations</h2>
-        <p className="text-2xl font-bold text-gray-800">1,250</p>
-      </div>
-      <div className="bg-white p-5 rounded-lg shadow-md text-gray-600">
-        <h2 className="text-lg font-semibold">Total Users</h2>
-        <p className="text-2xl font-bold text-gray-800">1,230</p>
-      </div>
-      <div className="bg-white p-5 rounded-lg shadow-md text-gray-600">
-        <h2 className="text-lg font-semibold">Total Clients</h2>
-        <p className="text-2xl font-bold text-gray-800">40</p>
-      </div>
-      <div className="bg-white p-5 rounded-lg shadow-md text-gray-600">
-        <h2 className="text-lg font-semibold">New Customers</h2>
-        <p className="text-2xl font-bold text-gray-800">150</p>
-      </div>
-    </div>
-
-    {/* Graph Section */}
-    <div className="mt-8 bg-white p-5 rounded-lg shadow-md">
-      <h2 className="text-xl font-semibold">User Growth Over Time</h2>
-      <div className="mt-4">
-        <Line data={data} />
-      </div>
-    </div>
-  </div>
-</div>
   );
 };
 
-export default page;
+export default Dashboard;

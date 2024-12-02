@@ -29,9 +29,8 @@ const Page = () => {
     };
 
     fetchAdmins();
-  }, []); // Empty dependency array ensures it runs only once
+  }, []);
 
-  // Render loading state
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -53,7 +52,7 @@ const Page = () => {
             Unable to Load Administrators
           </h2>
           <p className="text-gray-600 mb-6">{error}</p>
-          <button 
+          <button
             onClick={() => window.location.reload()}
             className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
           >
@@ -87,10 +86,9 @@ const Page = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {admins.map((admin) => (
-              <AdminCard 
-                key={admin.id || admin._id} 
-                value={admin}
-              />
+              <AdminCard
+                key={admin.id || admin._id}
+                value={admin}/>
             ))}
           </div>
         )}

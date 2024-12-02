@@ -1,8 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getProAndSer } from "../../api/adminApi";
-import { addClient, addQuotation, getClients } from "../../api/userApi";
+import { addClient, addQuotation, getClients, getProAndSer } from "../../api/userApi";
 import { UserMenu } from "../../userComponents/UserMenu";
 import { useSelector } from "react-redux";
 import { 
@@ -18,6 +17,7 @@ import toast from "react-hot-toast";
 const CreateQuotation = () => {
   const state = useSelector((state) => state);
   const user = state?.user?.user;
+  const adminId = user?.adminIs
   const router = useRouter();
   
   // State Management
@@ -40,12 +40,11 @@ const CreateQuotation = () => {
 
   const today = new Date().toISOString().split("T")[0];
 
-  // Fetch Initial Data
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
         const [proAndSerRes, clientsRes] = await Promise.all([
-          getProAndSer(),
+          getProAndSer(adminId),
           getClients()
         ]);
         
@@ -61,7 +60,6 @@ const CreateQuotation = () => {
     fetchInitialData();
   }, []);
 
-  // Calculate Total Amount
   useEffect(() => {
     const productTotal = selectedProducts.reduce(
       (total, product) => total + (product.price * product.quantity), 0
@@ -72,7 +70,6 @@ const CreateQuotation = () => {
     setTotalAmount(productTotal + serviceTotal);
   }, [selectedProducts, selectedServices]);
 
-  // Handlers
   const handleProductSelection = (product) => {
     setSelectedProducts(prev => 
       prev.some(p => p._id === product._id)
@@ -101,7 +98,7 @@ const CreateQuotation = () => {
 
   const handleAddClient = async () => {
     try {
-      const res = await addClient(newClient);
+      const res = await addClient(newClient,adminId);
       setClients(prev => [...prev, res.data.client]);
       setClientId(res.data.client._id);
       setModalOpen(false);
@@ -141,7 +138,7 @@ const CreateQuotation = () => {
     };
 
     try {
-      const res = await addQuotation(quotationData);
+      const res = await addQuotation(quotationData,adminId);
       if (res?.status === 200) {
         toast.success(res?.data?.message);
         router.push("/");
@@ -152,7 +149,6 @@ const CreateQuotation = () => {
     }
   };
 
-  // Multi-step form rendering
   const renderStep = () => {
     switch(step) {
       case 1:

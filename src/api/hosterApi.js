@@ -15,3 +15,18 @@ export const getAdmins = async()=>{
     const data = await hosterAxiosInstance.get('/getAdmins');
     return data
 }
+
+export const getAdminDetails = async(adminId)=>{
+    const data = await hosterAxiosInstance.get(`/getAdminDetails/${adminId}`);
+    return data
+}
+
+export const changeAdminPassword = async(adminId,password)=>{
+    const data = await hosterAxiosInstance.post('/changeAdminPassword',{adminId,password});
+    return data
+}
+
+export const changAdminBlock = async(adminId,status)=>{
+    const data = await hosterAxiosInstance.post('/changeAdminBlock',{adminId,status});
+    return data
+}

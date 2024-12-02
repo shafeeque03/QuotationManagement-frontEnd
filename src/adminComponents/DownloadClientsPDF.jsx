@@ -4,10 +4,10 @@ import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 import { getAllClients } from "@/api/adminApi";
 
-const DownloadClientsPDF = () => {
+const DownloadClientsPDF = ({adminId}) => {
   const[clients,setClints] = useState([]);
   useEffect(()=>{
-    getAllClients().then((res)=>{
+    getAllClients(adminId).then((res)=>{
       setClints(res?.data?.clients)
     }).catch((err)=>{
       console.log(err)

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { usePathname } from "next/navigation";
@@ -11,18 +11,27 @@ import {
   ChevronLeft,
   Menu,
   Boxes,
-  LogOut // Added LogOut icon
+  LogOut,
+  Settings
 } from "lucide-react";
 import Cookies from 'js-cookie';
 import { adminLogout } from "@/redux/slice/AdminSlice";
-import { useDispatch } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
+// Import other dependencies...
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false); // Hydration flag
   const pathname = usePathname();
   const dispatch = useDispatch();
   const router = useRouter();
+  const state = useSelector((state) => state);
+  const admin = state?.admin?.admin;
+
+  useEffect(() => {
+    // Mark as hydrated after mounting
+    setIsHydrated(true);
+  }, []);
 
   const handleLogout = () => {
     Cookies.remove('adminToken');
@@ -35,7 +44,8 @@ const Sidebar = () => {
     { path: "/admin/users", icon: Users, label: "Users" },
     { path: "/admin/quotations", icon: FileText, label: "Quotations" },
     { path: "/admin/clients", icon: Building2, label: "Clients" },
-    { path: "/admin/product-service", icon: Package, label: "Product/Service" },
+    { path: "/admin/products", icon: Package, label: "Product" },
+    { path: "/admin/services", icon: Settings, label: "Service" },
   ];
 
   return (
@@ -52,22 +62,22 @@ const Sidebar = () => {
 
       {/* Sidebar */}
       <div
-  className={`fixed top-0 left-0 z-50 w-72 h-screen overflow-y-auto 
-  bg-gradient-to-b from-gray-50 to-white border-r border-gray-100
-  shadow-xl transition-transform duration-300 ease-in-out transform
-  ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
-  md:relative md:translate-x-0 md:shadow-none`}
->
-
+        className={`fixed min-h-screen top-0 left-0 z-50 w-72 h-screen overflow-y-auto 
+        bg-gradient-to-b from-gray-50 to-white border-r border-gray-100
+        shadow-xl transition-all duration-300 ease-in-out transform
+        ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+        md:relative md:w-72 md:shadow-none`}
+      >
         {/* Header */}
         <div className="relative flex items-center justify-between p-6">
           <div className="flex items-center gap-2">
             <Boxes className="w-8 h-8 text-indigo-600" />
+            {/* Render admin.name only after hydration */}
             <h5 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-transparent bg-clip-text">
-              QMS
+              {isHydrated ? admin?.name || "Admin" : "Loading..."}
             </h5>
           </div>
-          
+
           {/* Mobile Close Button */}
           <button
             onClick={() => setIsOpen(false)}
@@ -85,18 +95,24 @@ const Sidebar = () => {
               return (
                 <Link key={item.path} href={item.path}>
                   <div
-                    className={`
-                      flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer
                       transition-all duration-200 group relative
                       ${
                         isActive
                           ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-200"
                           : "hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 text-gray-600"
-                      }
-                    `}
+                      }`}
                   >
-                    <item.icon className={`w-5 h-5 ${isActive ? "text-white" : "text-gray-500 group-hover:text-indigo-500"}`} />
-                    <span className={`font-medium ${isActive ? "text-white" : "group-hover:text-gray-900"}`}>
+                    <item.icon
+                      className={`w-5 h-5 ${
+                        isActive ? "text-white" : "text-gray-500 group-hover:text-indigo-500"
+                      }`}
+                    />
+                    <span
+                      className={`font-medium ${
+                        isActive ? "text-white" : "group-hover:text-gray-900"
+                      }`}
+                    >
                       {item.label}
                     </span>
                     {isActive && (

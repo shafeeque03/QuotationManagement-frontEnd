@@ -5,8 +5,8 @@ export const userLoginApi = async(loginId,password)=>{
     return data
 }
 
-export const addClient = async(value)=>{
-    const data = await userAxiosInstance.post('/addClient',{value});
+export const addClient = async(value,adminId)=>{
+    const data = await userAxiosInstance.post('/addClient',{value,adminId});
     return data
 }
 
@@ -15,8 +15,8 @@ export const getClients = async()=>{
     return data
 }
 
-export const addQuotation = async(quotationData)=>{
-    const data = await userAxiosInstance.post('/createQuotation',{quotationData});
+export const addQuotation = async(quotationData,adminId)=>{
+    const data = await userAxiosInstance.post('/createQuotation',{...quotationData,adminId});
     return data
 }
 
@@ -45,3 +45,8 @@ export const filteredData = async ({ searchTerm, startDate, endDate, sortBy, sor
     const response = await userAxiosInstance.get("/filteredData", { params });
     return response.data;
   };
+
+  export const getProAndSer = async(adminId)=>{
+    const data = await userAxiosInstance.get(`/getProAndSer/${adminId}`);
+    return data
+  }

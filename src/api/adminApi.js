@@ -1,96 +1,189 @@
 import { adminAxiosInstance } from "./axiosInstance";
 
-export const adminLoginVerify = async (id,password)=>{
-    const data = await adminAxiosInstance.post('/login',{id,password});
-    return data
-}
+export const adminLoginVerify = async (id, password) => {
+  const data = await adminAxiosInstance.post("/login", { id, password });
+  return data;
+};
 
-export const addUser = async (values,admin)=>{
-    const data = await adminAxiosInstance.post('/addUser',{...values,admin});
-    return data
-}
+export const downloadSerOrPro = async (fileName, admin_id) => {
+  const data = await adminAxiosInstance.get(
+    `/downloadSerOrPro?fileName=${fileName}&adminId=${admin_id}`
+  );
+  return data;
+};
 
-export const getUser = async (page, limit, search,admin_id) => {
-    const data = await adminAxiosInstance.get(
-      `/getUser?page=${page}&limit=${limit}&search=${search}&adminId=${admin_id}`
+//user
+export const addUser = async (values, admin) => {
+  const data = await adminAxiosInstance.post("/addUser", { ...values, admin });
+  return data;
+};
+
+export const getUserDetails = async (userId) => {
+  const data = await adminAxiosInstance.get(`userDetails/${userId}`);
+  return data;
+};
+
+
+
+export const updateUser = async (userId, values) => {
+  const data = await adminAxiosInstance.patch("/updateUser", {
+    userId,
+    values,
+  });
+  return data;
+};
+
+export const updatePassword = async (userId, password) => {
+  const data = await adminAxiosInstance.patch("/changeUserPassword", {
+    userId,
+    password,
+  });
+  return data;
+};
+
+export const getUser = async (page, limit, search, admin_id) => {
+  const data = await adminAxiosInstance.get(
+    `/getUser?page=${page}&limit=${limit}&search=${search}&adminId=${admin_id}`
+  );
+  return data;
+};
+
+//product
+export const addProduct = async (formdata, adminId) => {
+  const data = await adminAxiosInstance.post("/addProduct", {
+    formdata,
+    adminId,
+  });
+  return data;
+};
+
+export const getProducts = async (
+  adminId,
+  page = 1,
+  limit = 10,
+  searchQuery = ""
+) => {
+  try {
+    const res = await adminAxiosInstance.get(
+      `/getProducts?adminId=${adminId}&page=${page}&limit=${limit}&searchQuery=${encodeURIComponent(
+        searchQuery
+      )}`
     );
-    return data;
-  };
-  
+    return res.data; // Return the response data
+  } catch (error) {
+    console.error("Error fetching products:", error.message);
+    throw error; // Rethrow error for caller to handle
+  }
+};
 
-export const getUserDetails = async(userId)=>{
-    const data = await adminAxiosInstance.get(`userDetails/${userId}`);
-    return data
-}
+export const editProduct = async (productId, value) => {
+  const data = await adminAxiosInstance.patch("/editProduct", {
+    productId,
+    value,
+  });
+  return data;
+};
 
-export const searchUser = async(value)=>{
-    const data = await adminAxiosInstance.get(`searchUser/${value}`);
-    return data
-}
-
-export const updateUser = async(userId,values)=>{
-    const data = await adminAxiosInstance.patch("/updateUser",{userId,values});
-    return data
-}
-
-export const updatePassword = async(userId,password)=>{
-    const data = await adminAxiosInstance.patch("/changeUserPassword",{userId,password});
-    return data
-}
-
-export const addProduct = async(formdata)=>{
-    const data = await adminAxiosInstance.post('/addProduct',{formdata});
-    return data
-}
-
-export const addService = async(formdata)=>{
-    const data = await adminAxiosInstance.post('/addService',{formdata});
-    return data
-}
-
-export const getProAndSer = async()=>{
-    const data = await adminAxiosInstance.get('/getProAndSer');
-    return data
-}
-
-export const editProduct = async(productId,value)=>{
-    const data = await adminAxiosInstance.patch('/editProduct',{productId,value});
-    return data
-}
-
-export const editService = async(serviceId,value)=>{
-    const data = await adminAxiosInstance.patch('/editService',{serviceId,value});
-    return data    
-}
-
-export const getClinets =  async (page, limit, search) => {
-    const data = await adminAxiosInstance.get(
-      `/getClients?page=${page}&limit=${limit}&search=${search}`
+//service
+export const getServices = async (
+  adminId,
+  page = 1,
+  limit = 10,
+  searchQuery = ""
+) => {
+  try {
+    const res = await adminAxiosInstance.get(
+      `/getServices?adminId=${adminId}&page=${page}&limit=${limit}&searchQuery=${encodeURIComponent(
+        searchQuery
+      )}`
     );
-    return data;
+    return res.data; // Return the response data
+  } catch (error) {
+    console.error("Error fetching products:", error.message);
+    throw error; // Rethrow error for caller to handle
+  }
+};
+
+export const editService = async (serviceId, value) => {
+  const data = await adminAxiosInstance.patch("/editService", {
+    serviceId,
+    value,
+  });
+  return data;
+};
+
+export const addService = async (formdata, adminId) => {
+  const data = await adminAxiosInstance.post("/addService", {
+    formdata,
+    adminId,
+  });
+  return data;
+};
+
+export const getClinets = async (page, limit, search,adminId) => {
+  const data = await adminAxiosInstance.get(
+    `/getClients?page=${page}&limit=${limit}&search=${search}&adminId=${adminId}`
+  );
+  return data;
+};
+
+export const filteredQuotation = async ({
+  searchTerm,
+  startDate,
+  endDate,
+  sortBy,
+  sortOrder,
+  page,
+  limit,
+  adminId
+}) => {
+  const params = {
+    searchTerm,
+    startDate,
+    endDate,
+    sortBy,
+    sortOrder,
+    page,
+    limit,
+    adminId
   };
 
-  export const filteredQuotation = async ({ searchTerm, startDate, endDate, sortBy, sortOrder, page, limit }) => {
-    const params = {
-      searchTerm,
-      startDate,
-      endDate,
-      sortBy,
-      sortOrder,
-      page,
-      limit,
-    };
-  
-    const response = await adminAxiosInstance.get("/filteredQuotation", { params });
-    return response.data;
+  const response = await adminAxiosInstance.get("/filteredQuotation", {
+    params,
+  });
+  return response.data;
+};
+
+export const getAllUsers = async (adminId) => {
+  const data = await adminAxiosInstance.get(`/getAllUsers/${adminId}`);
+  return data;
+};
+
+export const getAllClients = async (adminId) => {
+  const data = await adminAxiosInstance.get(`/getAllClients/${adminId}`);
+  return data;
+};
+
+export const downloadQuotations = async ({
+  searchTerm,
+  startDate,
+  endDate,
+  sortBy,
+  sortOrder,
+  adminId
+}) => {
+  console.log(adminId,"okok")
+  const params = {
+    searchTerm,
+    startDate,
+    endDate,
+    sortBy,
+    sortOrder,
+    adminId
   };
 
-export const getAllUsers = async()=>{
-    const data = await adminAxiosInstance.get('/getAllUsers');
-    return data
-}
-
-export const getAllClients = async()=>{
-    const data = await adminAxiosInstance.get('/getAllClients');
-    return data
-}
+  const response = await adminAxiosInstance.get("/downloadQuotation", {
+    params,
+  });
+  return response.data;
+};

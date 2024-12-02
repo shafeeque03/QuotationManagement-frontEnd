@@ -95,9 +95,6 @@ export const HosterMenu = () => {
 
               {isProfileMenuOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2">
-                  <div className="px-4 py-2 text-sm text-gray-500 border-b">
-                    {hoster.name}
-                  </div>
                   <button 
                     onClick={handleLogout}
                     className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
@@ -125,11 +122,6 @@ export const HosterMenu = () => {
               </NavLink>
             </div>
             <div className="pt-4 pb-3 border-t border-gray-200">
-              <div className="flex items-center px-4">
-                <div>
-                  <div className="font-medium text-base text-gray-800">{hoster.name}</div>
-                </div>
-              </div>
               <div className="mt-3 space-y-1">
                 <button
                   onClick={handleLogout}

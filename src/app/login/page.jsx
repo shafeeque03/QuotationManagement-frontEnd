@@ -25,10 +25,11 @@ const LoginPage = () => {
   
         // Store token in cookies
         Cookies.set('userToken', res?.data?.token, {
-          expires: 1, // 1 day
-          secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+          expires: 0.5, // 12 hours
+          secure: true, // Use secure cookies in production
           sameSite: 'strict', // Protect against CSRF
         });
+        
   
         // Dispatch user login details
         dispatch(userLogin({ token: res?.data?.token, user: res?.data?.user }));

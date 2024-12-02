@@ -1,58 +1,91 @@
-import React from 'react'
+import React, { useState } from "react";
+import EditUserModal from "./EditUserModal";
 
-const UserListTable = ({allUsers,isLoading,currentPage,usersPerPage}) => {
+const UserListTable = ({ allUsers, setAllUsers, isLoading, currentPage, usersPerPage }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  const handleRowClick = (user) => {
+    setSelectedUser(user);
+    setIsModalOpen(true);
+  };
+
+  // Callback to update the user in the list
+  const handleUserUpdate = (updatedUser) => {
+    setAllUsers((prevUsers) =>
+      prevUsers.map((user) => (user._id === updatedUser._id ? updatedUser : user))
+    );
+  };
+
   return (
-    <div className="mt-4">
-          <div className="relative overflow-x-auto rounded-lg">
-            <table className="w-full text-sm text-left rtl:text-right text-gray-700">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-300">
-                <tr>
-                  <th className="px-4 py-2 md:px-6 md:py-3">No</th>
-                  <th className="px-4 py-2 md:px-6 md:py-3">User Name</th>
-                  <th className="px-4 py-2 md:px-6 md:py-3">Login ID</th>
-                  <th className="px-4 py-2 md:px-6 md:py-3">Email</th>
+    <div className="bg-white shadow-lg rounded-2xl overflow-hidden mt-4">
+      <div className="relative overflow-x-auto">
+        <table className="w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                No
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                User Name
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Login ID
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Email
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {isLoading ? (
+              <tr>
+                <td colSpan="4" className="px-6 py-4 text-center text-gray-500">
+                  Loading...
+                </td>
+              </tr>
+            ) : allUsers.length > 0 ? (
+              allUsers.map((user, index) => (
+                <tr
+                  key={user._id || index}
+                  className="hover:bg-gray-200 transition cursor-pointer"
+                  onClick={() => handleRowClick(user)}
+                >
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {(currentPage - 1) * usersPerPage + index + 1}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {user.name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {user.loginId}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {user.email}
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {isLoading ? (
-                  <tr>
-                    <td colSpan="4" className="px-4 py-2 text-center">
-                      <p>Loading...</p>
-                    </td>
-                  </tr>
-                ) : allUsers.length > 0 ? (
-                  allUsers.map((user, index) => (
-                    <tr
-                      className="bg-gray-200 hover:bg-gray-300 cursor-pointer"
-                      key={user._id || index}
-                      onClick={() =>
-                        (window.location.href = `/admin/userdetails?userId=${user._id}`)
-                      }
-                    >
-                      <th className="px-4 py-2 md:px-6 md:py-4 font-medium text-gray-700">
-                        {(currentPage - 1) * usersPerPage + index + 1}
-                      </th>
-                      <td className="px-4 py-2 md:px-6 md:py-4">{user.name}</td>
-                      <td className="px-4 py-2 md:px-6 md:py-4">
-                        {user.loginId}
-                      </td>
-                      <td className="px-4 py-2 md:px-6 md:py-4">
-                        {user.email}
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="4" className="text-center px-4 py-2">
-                      No users found
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-  )
-}
+              ))
+            ) : (
+              <tr>
+                <td colSpan="4" className="px-6 py-4 text-center text-gray-500">
+                  No users found
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
-export default UserListTable
+      {/* Edit Modal */}
+      {isModalOpen && (
+        <EditUserModal
+          user={selectedUser}
+          onClose={() => setIsModalOpen(false)}
+          onUpdate={handleUserUpdate}
+        />
+      )}
+    </div>
+  );
+};
+
+export default UserListTable;
