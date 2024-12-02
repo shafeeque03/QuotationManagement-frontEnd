@@ -31,7 +31,7 @@ const store = configureStore({
 
 store.subscribe(() => {
   const state = store.getState();
-  cookies.set('reduxState', JSON.stringify(state), { expires: 7 });
+  cookies.set('reduxState', JSON.stringify(state), { expires: 0.5 });
 });
 
 export default store;

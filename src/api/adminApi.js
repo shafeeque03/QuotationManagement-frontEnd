@@ -5,6 +5,13 @@ export const adminLoginVerify = async (id, password) => {
   return data;
 };
 
+export const dashboardData = async(adminId)=>{
+  const params = {adminId}
+  const data  = await adminAxiosInstance.get('/dashboardData',{params});
+  return data
+  
+}
+
 export const downloadSerOrPro = async (fileName, admin_id) => {
   const data = await adminAxiosInstance.get(
     `/downloadSerOrPro?fileName=${fileName}&adminId=${admin_id}`
