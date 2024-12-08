@@ -16,12 +16,12 @@ const Quotations = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [expirySortOrder, setExpirySortOrder] = useState(null);
+  const [sortOrder, setSortOrder] = useState("desc");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [totalPages, setTotalPages] = useState(1);
 
-  const ITEMS_PER_PAGE = 1;
+  const ITEMS_PER_PAGE = 5;
 
   const state = useSelector((state) => state);
   const user = state?.user?.user;
@@ -30,7 +30,7 @@ const Quotations = () => {
   const debouncedSearchTerm = useDebounce(searchTerm, 600);
   const debouncedStartDate = useDebounce(startDate, 600);
   const debouncedEndDate = useDebounce(endDate, 600);
-  const debouncedExpirySortOrder = useDebounce(expirySortOrder, 600);
+  const debouncedSortOrder = useDebounce(sortOrder, 600);
 
   const handleCreateQuotation = () => {
     router.push("/create-quotation");
@@ -43,8 +43,8 @@ const Quotations = () => {
         searchTerm: debouncedSearchTerm,
         startDate: debouncedStartDate,
         endDate: debouncedEndDate,
-        sortBy: "expireDate",
-        sortOrder: debouncedExpirySortOrder || "asc",
+        sortBy: "createdAt",
+        sortOrder: debouncedSortOrder || "desc",
         page: currentPage,
         limit: ITEMS_PER_PAGE,
         user: user,
@@ -72,7 +72,7 @@ const Quotations = () => {
     debouncedSearchTerm,
     debouncedStartDate,
     debouncedEndDate,
-    debouncedExpirySortOrder,
+    debouncedSortOrder,
     currentPage,
   ]);
 
@@ -80,9 +80,9 @@ const Quotations = () => {
     setSearchTerm(e.target.value.toLowerCase());
   };
 
-  const handleSortByExpiry = () => {
-    const order = expirySortOrder === "asc" ? "desc" : "asc";
-    setExpirySortOrder(order);
+  const handleSort = () => {
+    const order = sortOrder === "asc" ? "desc" : "asc";
+    setSortOrder(order);
   };
 
   if (!hydrated) {
@@ -152,7 +152,7 @@ const Quotations = () => {
 
                 {/* Sort Button */}
                 <button
-                  onClick={handleSortByExpiry}
+                  onClick={handleSort}
                   className="flex items-center justify-center space-x-2 px-4 py-3 
       bg-indigo-50 text-indigo-600 rounded-xl 
       hover:bg-indigo-100 transition
@@ -160,8 +160,8 @@ const Quotations = () => {
                 >
                   <SortDesc className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                   <span>
-                    Sort by Expiry
-                    {expirySortOrder === "asc" ? " ↑" : " ↓"}
+                    Sort by
+                    {sortOrder === "asc" ? " ↑" : " ↓"}
                   </span>
                 </button>
 

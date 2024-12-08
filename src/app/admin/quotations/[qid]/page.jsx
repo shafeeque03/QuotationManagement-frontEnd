@@ -4,14 +4,15 @@ import { quotationDetails } from "@/api/userApi";
 import Sidebar from "@/adminComponents/Sidebar";
 import toast from "react-hot-toast";
 import DownloadQuotation from "@/adminComponents/DownloadQuotation";
-import { 
-  FileTextIcon, 
-  UserIcon, 
-  CalendarIcon, 
-  PackageIcon, 
-  CogIcon, 
-  DollarSignIcon 
+import {
+  FileTextIcon,
+  UserIcon,
+  CalendarIcon,
+  PackageIcon,
+  CogIcon,
+  DollarSignIcon,
 } from "lucide-react";
+import QuotationUploads from "@/adminComponents/QuotationUploads";
 
 const Page = ({ params }) => {
   const { qid } = React.use(params);
@@ -43,11 +44,11 @@ const Page = ({ params }) => {
   const getStatusColor = (status) => {
     switch (status.toLowerCase()) {
       case "pending":
-        return "bg-yellow-500";
+        return "bg-yellow-50 border border-yellow-500 text-yellow-600";
       case "accepted":
-        return "bg-green-500";
+        return "bg-green-50 border border-green-500 text-green-600";
       case "rejected":
-        return "bg-red-500";
+        return "bg-red-50 border border-red-500 text-red-600";
       default:
         return "bg-gray-500";
     }
@@ -91,43 +92,32 @@ const Page = ({ params }) => {
                   Quotation #{quotation.quotationId}
                 </h1>
               </div>
+              <div className="flex items-center space-x-4"></div>
               <div className="flex items-center space-x-4">
-                <span
-                  className={`${getStatusColor(
-                    quotation.status
-                  )} text-white px-4 py-2 rounded-full text-sm font-medium`}
+                <div
+                  onClick={() => window.open(quotation.proposal, "_blank")}
+                  className="cursor-pointer bg-blue-500/10 text-blue-600 border border-blue-500/30  px-6 py-3 rounded-full hover:shadow-lg hover:scale-105 transition"
                 >
-                  {quotation.status.toUpperCase()}
-                </span>
-                <DownloadQuotation quotation={quotation} />
+                  View Proposal
+                </div>
               </div>
             </div>
 
-            {quotation.status.toLowerCase() === "rejected" && quotation.cancelReason && (
-              <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                <h3 className="text-red-800 font-semibold mb-2 flex items-center">
-                  <span className="mr-2">Rejection Reason:</span>
-                </h3>
-                <p className="text-red-600">{quotation.cancelReason}</p>
-              </div>
-            )}
+            {quotation.status.toLowerCase() === "rejected" &&
+              quotation.cancelReason && (
+                <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <h3 className="text-red-800 font-semibold mb-2 flex items-center">
+                    <span className="mr-2">Rejection Reason:</span>
+                  </h3>
+                  <p className="text-red-600">{quotation.cancelReason}</p>
+                </div>
+              )}
           </div>
 
           {/* Client and Creator Info */}
           <div className="grid md:grid-cols-2 gap-6">
-            {/* Client Details */}
-            <div className="bg-white rounded-xl shadow-md p-6">
-              <div className="flex items-center mb-4 space-x-3">
-                <UserIcon className="text-indigo-600 w-6 h-6" />
-                <h2 className="text-xl font-semibold">Client Details</h2>
-              </div>
-              <div className="space-y-2">
-                <p className="font-medium text-lg">{quotation.client.name}</p>
-                <p className="text-gray-600">{quotation.client.email}</p>
-              </div>
-            </div>
 
-            {/* Quotation Info */}
+              {/* Quotation Info */}
             <div className="bg-white rounded-xl shadow-md p-6">
               <div className="flex items-center mb-4 space-x-3">
                 <CalendarIcon className="text-indigo-600 w-6 h-6" />
@@ -135,92 +125,153 @@ const Page = ({ params }) => {
               </div>
               <div className="space-y-2">
                 <p>
-                  Created by: {quotation.createdBy.name} - {quotation.createdBy.email}
+                  Created by: {quotation.createdBy.name} -{" "}
+                  {quotation.createdBy.email}
                 </p>
                 <p>Created: {formatDate(quotation.createdAt)}</p>
                 <p>Expires: {formatDate(quotation.expireDate)}</p>
+                <p>
+                  Approved:{" "}
+                  {quotation.approvedOn
+                    ? formatDate(quotation.approvedOn)
+                    : "Not approved"}
+                </p>
+                <p>Total: {quotation.totalAmount?.toLocaleString()||'NA'}</p>
+                <p>
+                  {quotation.taxName||'NA'}: {quotation.tax?.toLocaleString()||'NA'}%
+                </p>
+                <p className="font-semibold">SubTotal: {quotation.subTotal?.toLocaleString()||'NA'}</p>
+                <p
+                  className={`${getStatusColor(
+                    quotation.status
+                  )} px-4 py-2 rounded-full text-sm font-medium mt-3 text-center`}
+                >
+                  {quotation.status.toUpperCase()}
+                </p>
               </div>
             </div>
+
+            {/* Client Details */}
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <div className="flex items-center mb-4 space-x-3">
+                <UserIcon className="text-indigo-600 w-6 h-6" />
+                <h2 className="text-xl font-semibold">Client Details</h2>
+              </div>
+              <div className="space-y-2">
+                <p className="font-medium text-lg">{quotation.client?.name}</p>
+                <p className="text-gray-600">{quotation.client?.email}</p>
+                <p className="text-gray-600">{quotation.client?.phone}</p>
+                <p className="text-gray-600">{quotation.client?.address}</p>
+                
+              </div>
+            </div>
+            
           </div>
 
           {/* Products Section */}
-          {quotation.products.length>0&&<div className="bg-white rounded-xl shadow-md">
-            <div className="border-b p-6 flex items-center space-x-3">
-              <PackageIcon className="text-indigo-600 w-6 h-6" />
-              <h2 className="text-xl font-semibold">Products</h2>
-            </div>
-            <div className="p-6">
+          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 my-4">
+            <h3 className="text-xl font-semibold text-gray-800 border-b border-gray-100 pb-2 mb-4">
+              Products
+            </h3>
+            {quotation.products.length > 0 ? (
+              <div className="mb-6">
               <div className="overflow-x-auto">
-                <div className="grid grid-cols-4 gap-4 pb-4 border-b font-semibold text-gray-600">
-                  <div>Product</div>
-                  <div className="text-center">Quantity</div>
-                  <div className="text-center">Price</div>
-                  <div className="text-right">Total</div>
-                </div>
-                <div className="divide-y">
-                  {quotation.products.map((item) => (
-                    <div key={item._id} className="grid grid-cols-4 gap-4 py-4 items-center">
-                      <div>
-                        <p className="font-medium">{item.product.name}</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-gray-600">{item.quantity}</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-gray-600">${item.price.toFixed(2)}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium">${(item.quantity * item.price).toFixed(2)}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
+                  <thead className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
+                    <tr>
+                      <th className="py-3 px-4 text-left">Product Name</th>
+                      <th className="py-3 px-4 text-center">Description</th>
+                      <th className="py-3 px-4 text-center">Price</th>
+                      <th className="py-3 px-4 text-center">Quantity</th>
+                      <th className="py-3 px-4 text-center">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-gray-600 text-sm font-light">
+                    {quotation.products.map((product, index) => (
+                      <tr
+                        key={product._id || index}
+                        className="border-b border-gray-200 hover:bg-gray-50 transition"
+                      >
+                        <td className="py-3 px-4 text-left">
+                          <span className="font-medium">{product.name}</span>
+                        </td>
+                        <td className="py-3 px-4 text-center">
+                          <p className="text-gray-500">
+                            {product.description || "No description"}
+                          </p>
+                        </td>
+                        <td className="py-3 px-4 text-center">
+                          {product.price.toFixed(2)}
+                        </td>
+                        <td className="py-3 px-4 text-center">
+                          {product.quantity}
+                        </td>
+                        <td className="py-3 px-4 text-center font-semibold">
+                          {(product.price * product.quantity).toFixed(2)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
+            ) : (
+              <p className="text-gray-500">
+                No products added to this quotation.
+              </p>
+            )}
           </div>
-          }
 
           {/* Services Section */}
-          {quotation.services.length>0&&<div className="bg-white rounded-xl shadow-md">
-            <div className="border-b p-6 flex items-center space-x-3">
-              <CogIcon className="text-indigo-600 w-6 h-6" />
-              <h2 className="text-xl font-semibold">Services</h2>
-            </div>
-            <div className="p-6">
+          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+            <h3 className="text-xl font-semibold text-gray-800 border-b border-gray-100 pb-2 mb-4">
+              Services
+            </h3>
+            {quotation.services.length > 0 ? (
+              <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-4">Selected Services</h3>
               <div className="overflow-x-auto">
-                <div className="grid grid-cols-2 gap-4 pb-4 border-b font-semibold text-gray-600">
-                  <div>Service</div>
-                  <div className="text-right">Price</div>
-                </div>
-                <div className="divide-y">
-                  {quotation.services.map((item) => (
-                    <div key={item._id} className="grid grid-cols-2 gap-4 py-4 items-center">
-                      <div>
-                        <p className="font-medium">{item.service.name}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium">${item.price.toFixed(2)}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
+                  <thead className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
+                    <tr>
+                      <th className="py-3 px-4 text-left">Service Name</th>
+                      <th className="py-3 px-4 text-left">Description</th>
+                      <th className="py-3 px-4 text-right">Price</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-gray-600 text-sm font-light">
+                    {quotation.services.map((service, index) => (
+                      <tr
+                        key={service._id || index}
+                        className="border-b border-gray-200 hover:bg-gray-50 transition"
+                      >
+                        <td className="py-3 px-4 text-left">
+                          <span className="font-medium">{service.name}</span>
+                        </td>
+                        <td className="py-3 px-4 text-left">
+                          <p className="text-gray-500">
+                            {service.description || "No description"}
+                          </p>
+                        </td>
+                        <td className="py-3 px-4 text-right font-semibold">
+                          {service.price.toFixed(2)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
+            ) : (
+              <p className="text-gray-500">
+                No services added to this quotation.
+              </p>
+            )}
           </div>
-          }
 
-          {/* Total Amount */}
-          <div className="bg-white rounded-xl shadow-md">
-            <div className="p-6 flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <DollarSignIcon className="text-green-600 w-6 h-6" />
-                <span className="text-xl font-semibold">Total Amount</span>
-              </div>
-              <span className="text-2xl font-bold text-green-600">
-                ${quotation.totalAmount.toFixed(2)}
-              </span>
-            </div>
-          </div>
+          {quotation.fileUrl && quotation.fileUrl.length > 0 && (
+            <QuotationUploads files={quotation.fileUrl} />
+          )}
         </div>
       </div>
     </div>

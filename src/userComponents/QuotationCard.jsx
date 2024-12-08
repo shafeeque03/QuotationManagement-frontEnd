@@ -5,7 +5,7 @@ import {
   Clock, 
   FileText, 
   Calendar, 
-  IndianRupee
+  IndianRupee,
 } from "lucide-react";
 
 const QuotationCard = ({ value }) => {
@@ -90,7 +90,7 @@ const QuotationCard = ({ value }) => {
                 <span className="text-sm">Total Amount</span>
               </div>
               <span className="font-bold text-emerald-600">
-                ₹{value.totalAmount.toLocaleString()}
+                {value.subTotal?.toLocaleString()||'NA'}
               </span>
             </div>
           </div>

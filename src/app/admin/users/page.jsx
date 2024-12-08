@@ -51,7 +51,6 @@ const Page = () => {
     }
   };
 
-  console.log(currentPage,totalPages,"heyyy")
 
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
 

@@ -37,15 +37,14 @@ const DownloadPDFButton = ({ fileName }) => {
       rows = data.map((item, index) => [
         index + 1,
         item.name,
-        item.price.toLocaleString(),
-        item.quantity,
+        item.description
       ]);
     } else if (fileName === "services") {
       headers = ["No", "Name", "isAvailable"];
       rows = data.map((item, index) => [
         index + 1,
         item.name,
-        item.isAvailable ? "Yes" : "No",
+        item.description
       ]);
     } else {
       console.error("Invalid type specified");

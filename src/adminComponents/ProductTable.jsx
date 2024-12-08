@@ -1,7 +1,7 @@
 import React from "react";
 import DownloadButton from "@/adminComponents/DownloadProAndSer.jsx";
 
-const ProductTable = ({ filteredProducts, openEditModal, currentPage, productsPerPage }) => {
+const ProductTable = ({ filteredProducts, currentPage, productsPerPage }) => {
   return (
     <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
       <div className="flex justify-between items-center p-4">
@@ -19,10 +19,7 @@ const ProductTable = ({ filteredProducts, openEditModal, currentPage, productsPe
                 Name
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Price
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Quantity
+                Description
               </th>
             </tr>
           </thead>
@@ -32,7 +29,6 @@ const ProductTable = ({ filteredProducts, openEditModal, currentPage, productsPe
                 <tr
                   key={index}
                   className="hover:bg-gray-200 transition cursor-pointer"
-                  onClick={() => openEditModal(product)}
                 >
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {index + 1 + (currentPage - 1) * productsPerPage}
@@ -41,11 +37,9 @@ const ProductTable = ({ filteredProducts, openEditModal, currentPage, productsPe
                     {product.name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    ${product.price?.toFixed(2) || "N/A"}
+                    {product.description }
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {product.quantity || "N/A"}
-                  </td>
+
                 </tr>
               ))
             ) : (

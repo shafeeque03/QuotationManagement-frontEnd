@@ -4,7 +4,7 @@ import { UserMenu } from "../../userComponents/UserMenu";
 import { useSearchParams } from "next/navigation";
 import { quotationDetails, quotationStatusChange } from "../../api/userApi";
 import toast from "react-hot-toast";
-import DownloadQuotationPDF from "../../userComponents/DownloadQuotationPDF";
+import QuotationFiles from "@/userComponents/QuotationFiles";
 
 const Page = () => {
   const [quotation, setQuotation] = useState(null);
@@ -13,6 +13,7 @@ const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+
 
   const params = useSearchParams();
   const qid = params.get("qid");
@@ -35,7 +36,6 @@ const Page = () => {
       .finally(() => setLoading(false));
   }, [qid]);
 
-
   const handleStatusChange = async (newStatus) => {
     if (newStatus === "rejected" && !rejectReason) {
       toast.error("Please provide a rejection reason.");
@@ -47,7 +47,8 @@ const Page = () => {
       setQuotation((prev) => ({
         ...prev,
         status: newStatus,
-        cancelReason: newStatus === "rejected" ? rejectReason : prev.cancelReason,
+        cancelReason:
+          newStatus === "rejected" ? rejectReason : prev.cancelReason,
       }));
       toast.success(`Quotation status updated to ${newStatus}`);
       if (newStatus === "rejected") {
@@ -95,18 +96,14 @@ const Page = () => {
             Quotation Details
           </h2>
           <div className="flex flex-wrap gap-3">
-          <div className={`${
-                quotation.status === "rejected"
-                  ? "bg-red-500/10 text-red-600 border border-red-500/30"
-                  : quotation.status === "accepted"
-                  ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/30"
-                  : "bg-amber-500/10 text-amber-600 border border-amber-500/30"
-              } mt-6 px-6 py-3 rounded-full hover:shadow-lg hover:scale-105 transition`}>
-                {quotation.status.toUpperCase()}
-              </div>
-          <DownloadQuotationPDF quotation={quotation} />
+            
+            <div
+              onClick={() => window.open(quotation.proposal, "_blank")}
+              className="cursor-pointer bg-blue-500/10 text-blue-600 border border-blue-500/30 mt-6 px-6 py-3 rounded-full hover:shadow-lg hover:scale-105 transition"
+            >
+              View Proposal
+            </div>
           </div>
-          
         </div>
 
         {/* Main Content Grid */}
@@ -122,28 +119,42 @@ const Page = () => {
                 {quotation.quotationId}
               </p>
               <p className="text-gray-700">
-                <span className="font-medium text-gray-900">Total Amount:</span>{" "}
-                ₹{quotation.totalAmount.toLocaleString()}
-              </p>
-              <p className="text-gray-700">
                 <span className="font-medium text-gray-900">Expire Date:</span>{" "}
                 {new Date(quotation.expireDate).toLocaleDateString()}
               </p>
-              {/* <div className={`${
-                quotation.status === "rejected"
-                  ? "text-red-600 bg-red-300 border border-red-700"
-                  : quotation.status === "accepted"
-                  ? "text-green-600 bg-green-300 border border-green-700"
-                  : "text-yellow-600 bg-yellow-300 border border-yellow-700"
-              } w-28 py-1 text-center text-sm rounded-xl`}>
-                {quotation.status.toUpperCase()}
-              </div> */}
+              <p className="text-gray-700">
+                <span className="font-medium text-gray-900">Total Amount:</span>{" "}
+                {quotation.totalAmount?.toLocaleString()||'NA'}
+              </p>
+              <p className="text-gray-700">
+                <span className="font-medium text-gray-900">{quotation.taxName}:</span>{" "}
+                {quotation.tax?.toLocaleString()||'NA'}%
+              </p>
+              <p className="text-gray-700 font-semibold">
+                <span className="font-medium text-gray-900 ">SubTotal:</span>{" "}
+                {quotation.subTotal?.toLocaleString()||'NA'}
+              </p>
+              
               {quotation.status === "rejected" && (
                 <p className="text-gray-700">
-                  <span className="font-medium text-gray-900">Cancel Reason:</span>{" "}
+                  <span className="font-medium text-gray-900">
+                    Cancel Reason:
+                  </span>{" "}
                   {quotation.cancelReason}
                 </p>
               )}
+              <div
+              className={`${
+                quotation.status === "rejected"
+                  ? "bg-red-500/10 text-red-600 border border-red-500/30"
+                  : quotation.status === "accepted"
+                  ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/30"
+                  : "bg-amber-500/10 text-amber-600 border border-amber-500/30"
+              } mt-6 px-6 py-3 rounded-full hover:shadow-lg hover:scale-105 transition text-center`}
+            >
+              {quotation.status.toUpperCase()}
+            </div>
+              
             </div>
           </div>
 
@@ -161,44 +172,70 @@ const Page = () => {
                 <span className="font-medium text-gray-900">Email:</span>{" "}
                 {quotation.client.email}
               </p>
+              <p className="text-gray-700">
+                <span className="font-medium text-gray-900">Phone:</span>{" "}
+                {quotation.client.phone}
+              </p>
+              <p className="text-gray-700">
+                <span className="font-medium text-gray-900">Address:</span>{" "}
+                {quotation.client.address}
+              </p>
             </div>
           </div>
+        </div>
+
 
           {/* Products Card */}
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 my-4">
             <h3 className="text-xl font-semibold text-gray-800 border-b border-gray-100 pb-2 mb-4">
               Products
             </h3>
             {quotation.products.length > 0 ? (
-              <div className="space-y-3">
-                <div className="grid grid-cols-12 text-sm text-gray-500 px-2">
-                  <span className="col-span-5">Product</span>
-                  <span className="col-span-2 text-center">Qty</span>
-                  <span className="col-span-2 text-center">Price</span>
-                  <span className="col-span-3 text-right">Total</span>
-                </div>
-                {quotation.products.map((item, index) => (
-                  <div
-                    key={index}
-                    className="grid grid-cols-12 bg-gray-50 rounded-lg p-3 items-center hover:bg-gray-100 transition-colors duration-200"
-                  >
-                    <span className="col-span-5 font-medium text-gray-800 truncate">
-                      {item.product.name}
-                    </span>
-                    <span className="col-span-2 text-center text-blue-600">
-                      {item.quantity}
-                    </span>
-                    <span className="col-span-2 text-center text-gray-600">
-                      ₹{item.price.toLocaleString()}
-                    </span>
-                    <span className="col-span-3 text-right text-indigo-600 font-semibold">
-                      ₹{(item.price * item.quantity).toLocaleString()}
-                    </span>
-                  </div>
-                ))}
+              <div className="mb-6">
+              <div className="overflow-x-auto">
+                <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
+                  <thead className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
+                    <tr>
+                      <th className="py-3 px-4 text-left">Product Name</th>
+                      <th className="py-3 px-4 text-center">Description</th>
+                      <th className="py-3 px-4 text-center">Price</th>
+                      <th className="py-3 px-4 text-center">Quantity</th>
+                      <th className="py-3 px-4 text-center">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-gray-600 text-sm font-light">
+                    {quotation.products.map((product, index) => (
+                      <tr
+                        key={product._id || index}
+                        className="border-b border-gray-200 hover:bg-gray-50 transition"
+                      >
+                        <td className="py-3 px-4 text-left">
+                          <span className="font-medium">{product.name}</span>
+                        </td>
+                        <td className="py-3 px-4 text-center">
+                          <p className="text-gray-500">
+                            {product.description || "No description"}
+                          </p>
+                        </td>
+                        <td className="py-3 px-4 text-center">
+                          {product.price.toFixed(2)}
+                        </td>
+                        <td className="py-3 px-4 text-center">
+                          {product.quantity}
+                        </td>
+                        <td className="py-3 px-4 text-center font-semibold">
+                          {(product.price * product.quantity).toFixed(2)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
+            </div>
             ) : (
-              <p className="text-gray-500">No products added to this quotation.</p>
+              <p className="text-gray-500">
+                No products added to this quotation.
+              </p>
             )}
           </div>
 
@@ -208,30 +245,50 @@ const Page = () => {
               Services
             </h3>
             {quotation.services.length > 0 ? (
-              <div className="space-y-3">
-                <div className="grid grid-cols-12 text-sm text-gray-500 px-2">
-                  <span className="col-span-7">Service</span>
-                  <span className="col-span-5 text-right">Price</span>
-                </div>
-                {quotation.services.map((item, index) => (
-                  <div
-                    key={index}
-                    className="grid grid-cols-12 bg-gray-50 rounded-lg p-3 items-center hover:bg-gray-100 transition-colors duration-200"
-                  >
-                    <span className="col-span-7 font-medium text-gray-800 truncate">
-                      {item.service.name}
-                    </span>
-                    <span className="col-span-5 text-right text-indigo-600 font-semibold">
-                      ₹{item.price.toLocaleString()}
-                    </span>
-                  </div>
-                ))}
+              <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-4">Selected Services</h3>
+              <div className="overflow-x-auto">
+                <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
+                  <thead className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
+                    <tr>
+                      <th className="py-3 px-4 text-left">Service Name</th>
+                      <th className="py-3 px-4 text-left">Description</th>
+                      <th className="py-3 px-4 text-right">Price</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-gray-600 text-sm font-light">
+                    {quotation.services.map((service, index) => (
+                      <tr
+                        key={service._id || index}
+                        className="border-b border-gray-200 hover:bg-gray-50 transition"
+                      >
+                        <td className="py-3 px-4 text-left">
+                          <span className="font-medium">{service.name}</span>
+                        </td>
+                        <td className="py-3 px-4 text-left">
+                          <p className="text-gray-500">
+                            {service.description || "No description"}
+                          </p>
+                        </td>
+                        <td className="py-3 px-4 text-right font-semibold">
+                          {service.price.toFixed(2)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
+            </div>
             ) : (
-              <p className="text-gray-500">No services added to this quotation.</p>
+              <p className="text-gray-500">
+                No services added to this quotation.
+              </p>
             )}
           </div>
-        </div>
+        {/* Files Card */}
+        {quotation.fileUrl && quotation.fileUrl.length>0 && (
+          <QuotationFiles files={quotation.fileUrl} />
+        )}
 
         {/* Action Buttons */}
         {quotation.status === "pending" && (
@@ -254,18 +311,6 @@ const Page = () => {
             </button>
           </div>
         )}
-
-        {/* {(quotation.status === "accepted" || quotation.status === "rejected") && (
-          <div className="mt-8 flex justify-center">
-            <span className={`text-xl font-semibold text-white p-3 rounded-xl ${
-              quotation.status === "accepted" 
-                ? "bg-green-500" 
-                : "bg-red-500"
-            }`}>
-              Quotation {quotation.status}
-            </span>
-          </div>
-        )} */}
 
         {/* Reject Modal */}
         {isModalOpen && (

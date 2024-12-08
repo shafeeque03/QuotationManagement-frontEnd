@@ -1,7 +1,7 @@
 import React from "react";
 import DownloadButton from "@/adminComponents/DownloadProAndSer.jsx";
 
-const ServiceTable = ({ filteredServices, openEditModal, currentPage, servicesPerPage }) => {
+const ServiceTable = ({ filteredServices, currentPage, servicesPerPage }) => {
   return (
     <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
       <div className="flex justify-between items-center p-4">
@@ -19,10 +19,7 @@ const ServiceTable = ({ filteredServices, openEditModal, currentPage, servicesPe
                 Name
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Price
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Status
+                Description
               </th>
             </tr>
           </thead>
@@ -32,7 +29,6 @@ const ServiceTable = ({ filteredServices, openEditModal, currentPage, servicesPe
                 <tr
                   key={index}
                   className="hover:bg-gray-200 transition cursor-pointer"
-                  onClick={() => openEditModal(service)}
                 >
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {index + 1 + (currentPage - 1) * servicesPerPage}
@@ -41,10 +37,7 @@ const ServiceTable = ({ filteredServices, openEditModal, currentPage, servicesPe
                     {service.name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    ${service.price?.toFixed(2) || "N/A"}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {service.isAvailable ? "Available" : "Not Available"}
+                    {service.description}
                   </td>
                 </tr>
               ))

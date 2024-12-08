@@ -79,14 +79,6 @@ export const UserMenu = () => {
               <Home size={20} />
               Quotations
             </NavLink>
-            <NavLink href="/products">
-              <Package size={20} />
-              Products
-            </NavLink>
-            <NavLink href="/services">
-              <Settings size={20} />
-              Services
-            </NavLink>
 
             {/* Profile Dropdown */}
             <div className="relative">
@@ -122,14 +114,6 @@ export const UserMenu = () => {
               <NavLink href="/">
                 <Home size={20} />
                 Quotations
-              </NavLink>
-              <NavLink href="/products">
-                <Package size={20} />
-                Products
-              </NavLink>
-              <NavLink href="/services">
-                <Settings size={20} />
-                Services
               </NavLink>
             </div>
             <div className="pt-4 pb-3 border-t border-gray-200">

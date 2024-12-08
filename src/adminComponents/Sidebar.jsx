@@ -1,3 +1,4 @@
+"use client"
 import React, { useState,useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
@@ -46,6 +47,7 @@ const Sidebar = () => {
     { path: "/admin/clients", icon: Building2, label: "Clients" },
     { path: "/admin/products", icon: Package, label: "Product" },
     { path: "/admin/services", icon: Settings, label: "Service" },
+    { path: "/admin/report", icon: Settings, label: "Report" },
   ];
 
   return (

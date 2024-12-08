@@ -16,7 +16,7 @@ const QuotationsTable = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [expirySortOrder, setExpirySortOrder] = useState(null);
+  const [sortOrder, setSortOrder] = useState(null);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [totalPages, setTotalPages] = useState(1);
@@ -25,13 +25,13 @@ const QuotationsTable = () => {
   const admin = state?.admin?.admin;
   const adminId = admin?._id;
 
-  const ITEMS_PER_PAGE = 1;
+  const ITEMS_PER_PAGE = 5;
   const router = useRouter();
 
   const debouncedSearchTerm = useDebounce(searchTerm, 600);
   const debouncedStartDate = useDebounce(startDate, 600);
   const debouncedEndDate = useDebounce(endDate, 600);
-  const debouncedExpirySortOrder = useDebounce(expirySortOrder, 600);
+  const debouncedSortOrder = useDebounce(sortOrder, 600);
 
   const fetchFilteredData = async () => {
     setLoading(true);
@@ -40,8 +40,8 @@ const QuotationsTable = () => {
         searchTerm: debouncedSearchTerm,
         startDate: debouncedStartDate,
         endDate: debouncedEndDate,
-        sortBy: "expireDate",
-        sortOrder: debouncedExpirySortOrder || "asc",
+        sortBy: "createdAt",
+        sortOrder: debouncedSortOrder || "desc",
         page: currentPage,
         limit: ITEMS_PER_PAGE,
         adminId:adminId
@@ -69,21 +69,21 @@ const QuotationsTable = () => {
     debouncedSearchTerm,
     debouncedStartDate,
     debouncedEndDate,
-    debouncedExpirySortOrder,
+    debouncedSortOrder,
     currentPage,
   ]);
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, expirySortOrder, startDate, endDate]);
+  }, [searchTerm, sortOrder, startDate, endDate]);
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value.toLowerCase());
   };
 
-  const handleSortByExpiry = () => {
-    const order = expirySortOrder === "asc" ? "desc" : "asc";
-    setExpirySortOrder(order);
+  const handleSort = () => {
+    const order = sortOrder === "asc" ? "desc" : "asc";
+    setSortOrder(order);
   };
 
   const handleViewQuotation = (id) => {
@@ -149,7 +149,7 @@ const QuotationsTable = () => {
 
             {/* Sort Button */}
             <button
-              onClick={handleSortByExpiry}
+              onClick={handleSort}
               className="flex items-center justify-center space-x-2 px-4 py-3 
                 bg-indigo-50 text-indigo-600 rounded-xl 
                 hover:bg-indigo-100 transition
@@ -157,8 +157,8 @@ const QuotationsTable = () => {
             >
               <SortDesc className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
               <span>
-                Sort by Expiry
-                {expirySortOrder === "asc" ? " ↑" : " ↓"}
+                Sort by
+                {sortOrder === "asc" ? " ↑" : " ↓"}
               </span>
             </button>
 
@@ -167,8 +167,8 @@ const QuotationsTable = () => {
                 searchTerm={debouncedSearchTerm}
                 startDate={debouncedStartDate}
                 endDate={debouncedEndDate}
-                sortBy={"expireDate"}
-                sortOrder={debouncedExpirySortOrder || "asc"}
+                sortBy={"createdAt"}
+                sortOrder={debouncedSortOrder || "asc"}
                 adminId={adminId}
             />
           </div>

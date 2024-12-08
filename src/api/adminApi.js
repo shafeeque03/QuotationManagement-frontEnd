@@ -56,13 +56,7 @@ export const getUser = async (page, limit, search, admin_id) => {
 };
 
 //product
-export const addProduct = async (formdata, adminId) => {
-  const data = await adminAxiosInstance.post("/addProduct", {
-    formdata,
-    adminId,
-  });
-  return data;
-};
+
 
 export const getProducts = async (
   adminId,
@@ -83,13 +77,7 @@ export const getProducts = async (
   }
 };
 
-export const editProduct = async (productId, value) => {
-  const data = await adminAxiosInstance.patch("/editProduct", {
-    productId,
-    value,
-  });
-  return data;
-};
+
 
 //service
 export const getServices = async (
@@ -111,21 +99,6 @@ export const getServices = async (
   }
 };
 
-export const editService = async (serviceId, value) => {
-  const data = await adminAxiosInstance.patch("/editService", {
-    serviceId,
-    value,
-  });
-  return data;
-};
-
-export const addService = async (formdata, adminId) => {
-  const data = await adminAxiosInstance.post("/addService", {
-    formdata,
-    adminId,
-  });
-  return data;
-};
 
 export const getClinets = async (page, limit, search,adminId) => {
   const data = await adminAxiosInstance.get(

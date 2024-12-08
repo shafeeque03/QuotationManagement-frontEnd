@@ -54,7 +54,7 @@ const QuotationTable = ({quotations,handleViewQuotation}) => {
                         #{quotation.quotationId}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        ${quotation.totalAmount?.toFixed(2) || "N/A"}
+                        {quotation.subTotal?.toFixed(2) || "N/A"}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {formatDate(quotation.createdAt)}

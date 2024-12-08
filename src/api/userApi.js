@@ -10,8 +10,9 @@ export const addClient = async(value,adminId)=>{
     return data
 }
 
-export const getClients = async()=>{
-    const data = await userAxiosInstance.get('/getClients');
+export const getClients = async(adminId)=>{
+    const params = {adminId}
+    const data = await userAxiosInstance.get('/getClients',{params});
     return data
 }
 
