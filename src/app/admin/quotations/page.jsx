@@ -9,13 +9,13 @@ import Sidebar from "@/adminComponents/Sidebar";
 import DownloadQuotationsPDF from "@/adminComponents/DownloadQuotationsPDF";
 import { useSelector } from "react-redux";
 import QuotationTable from "@/adminComponents/QuotationTable";
+import { useSearchParams } from "next/navigation";
 
 const QuotationsTable = () => {
   const [hydrated, setHydrated] = useState(false);
   const [quotations, setQuotations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
   const [sortOrder, setSortOrder] = useState(null);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -24,14 +24,22 @@ const QuotationsTable = () => {
   const state = useSelector((state) => state);
   const admin = state?.admin?.admin;
   const adminId = admin?._id;
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const initialPage = parseInt(searchParams.get("page")) || 1;
+  const [currentPage, setCurrentPage] = useState(initialPage);
 
   const ITEMS_PER_PAGE = 5;
-  const router = useRouter();
 
   const debouncedSearchTerm = useDebounce(searchTerm, 600);
   const debouncedStartDate = useDebounce(startDate, 600);
   const debouncedEndDate = useDebounce(endDate, 600);
   const debouncedSortOrder = useDebounce(sortOrder, 600);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    router.push(`/admin/quotations?page=${page}`, { scroll: false });
+  };
 
   const fetchFilteredData = async () => {
     setLoading(true);
@@ -73,13 +81,28 @@ const QuotationsTable = () => {
     currentPage,
   ]);
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, sortOrder, startDate, endDate]);
+  // useEffect(() => {
+  //   router.push('/admin/quotations?page=1');
+  //   setCurrentPage(1);
+  // }, [searchTerm, sortOrder, startDate, endDate]);
 
   const handleSearch = (e) => {
+    setCurrentPage(1);
+    router.push('/admin/quotations?page=1')
     setSearchTerm(e.target.value.toLowerCase());
   };
+
+  const handleStartDate = (e)=>{
+    setCurrentPage(1);
+    router.push('/admin/quotations?page=1')
+    setStartDate(e.target.value)
+  }
+
+  const handleEndDate = (e)=>{
+    setCurrentPage(1);
+    router.push('/admin/quotations?page=1')
+    setEndDate(e.target.value)
+  }
 
   const handleSort = () => {
     const order = sortOrder === "asc" ? "desc" : "asc";
@@ -127,7 +150,7 @@ const QuotationsTable = () => {
                 <input
                   type="date"
                   value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
+                  onChange={handleStartDate}
                   className="w-full px-4 py-3 pl-10 rounded-xl bg-gray-100 text-gray-700 
                     focus:outline-none focus:ring-2 focus:ring-indigo-500
                     text-xs sm:text-sm"
@@ -138,7 +161,7 @@ const QuotationsTable = () => {
                 <input
                   type="date"
                   value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
+                  onChange={handleEndDate}
                   className="w-full px-4 py-3 pl-10 rounded-xl bg-gray-100 text-gray-700 
                     focus:outline-none focus:ring-2 focus:ring-indigo-500
                     text-xs sm:text-sm"
@@ -193,7 +216,7 @@ const QuotationsTable = () => {
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            onPageChange={setCurrentPage}
+            onPageChange={handlePageChange}
           />
         </div>
       </div>

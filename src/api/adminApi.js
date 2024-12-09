@@ -167,3 +167,8 @@ export const downloadQuotations = async ({
   });
   return response.data;
 };
+
+export const totalReport = async(adminId)=>{
+  const data = await adminAxiosInstance.get(`/totalReport/${adminId}`);
+  return data
+}

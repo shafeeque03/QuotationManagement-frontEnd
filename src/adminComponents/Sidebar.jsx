@@ -1,7 +1,7 @@
 "use client"
 import React, { useState,useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { usePathname } from "next/navigation";
 import { 
   LayoutDashboard, 
@@ -13,7 +13,10 @@ import {
   Menu,
   Boxes,
   LogOut,
-  Settings
+  Settings,
+  FilePen,
+  UserPen
+  
 } from "lucide-react";
 import Cookies from 'js-cookie';
 import { adminLogout } from "@/redux/slice/AdminSlice";
@@ -29,6 +32,10 @@ const Sidebar = () => {
   const state = useSelector((state) => state);
   const admin = state?.admin?.admin;
 
+  const searchParams = useSearchParams();
+
+  const currentPath = pathname + (searchParams.toString() ? `?${searchParams}` : "");
+
   useEffect(() => {
     // Mark as hydrated after mounting
     setIsHydrated(true);
@@ -43,11 +50,12 @@ const Sidebar = () => {
   const menuItems = [
     { path: "/admin", icon: LayoutDashboard, label: "Dashboard" },
     { path: "/admin/users", icon: Users, label: "Users" },
-    { path: "/admin/quotations", icon: FileText, label: "Quotations" },
+    { path: "/admin/quotations?page=1", icon: FileText, label: "Quotations" },
     { path: "/admin/clients", icon: Building2, label: "Clients" },
     { path: "/admin/products", icon: Package, label: "Product" },
     { path: "/admin/services", icon: Settings, label: "Service" },
-    { path: "/admin/report", icon: Settings, label: "Report" },
+    { path: "/admin/report", icon: FilePen, label: "Report" },
+    { path: "/admin/profile", icon: UserPen, label: "Profile" },
   ];
 
   return (
@@ -93,7 +101,7 @@ const Sidebar = () => {
         <nav className="px-4 pb-6 flex flex-col h-[calc(100vh-120px)]">
           <div className="space-y-2 flex-grow">
             {menuItems.map((item) => {
-              const isActive = pathname === item.path;
+              const isActive = currentPath === item.path;
               return (
                 <Link key={item.path} href={item.path}>
                   <div

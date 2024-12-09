@@ -51,3 +51,9 @@ export const filteredData = async ({ searchTerm, startDate, endDate, sortBy, sor
     const data = await userAxiosInstance.get(`/getProAndSer/${adminId}`);
     return data
   }
+
+  export const userDashboardData = async(user)=>{
+    const params = {user}
+    const data = await userAxiosInstance.get('/dashData',{params});
+    return data
+  }

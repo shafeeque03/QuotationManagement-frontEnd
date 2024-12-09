@@ -1,9 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Menu, X, User, LogOut, Home, Package, Settings } from 'lucide-react';
+import { Menu, X, User, LogOut, Home, Package, Settings,LayoutDashboard } from 'lucide-react';
 import Cookies from 'js-cookie';
 import { userLogout } from "@/redux/slice/UserSlice";
 
@@ -19,7 +19,6 @@ export const UserMenu = () => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    // Check if we are on the client side
     setIsClient(true);
   }, []);
 
@@ -29,6 +28,11 @@ export const UserMenu = () => {
     router.push('/login');
   };
 
+
+  const searchParams = useSearchParams();
+
+  const currentPath = pathname + (searchParams.toString() ? `?${searchParams}` : "");
+  
   const NavLink = ({ href, children, className = "" }) => (
     <Link 
       href={href} 
@@ -37,7 +41,7 @@ export const UserMenu = () => {
         px-3 py-2 
         rounded-lg 
         transition-all duration-300 
-        ${pathname === href 
+        ${currentPath === href 
           ? 'bg-indigo-100 text-indigo-600' 
           : 'text-gray-600 hover:bg-gray-100 hover:text-indigo-600'}
       `}
@@ -76,6 +80,10 @@ export const UserMenu = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-4 items-center">
             <NavLink href="/">
+              <LayoutDashboard size={20} />
+              Dashboard
+            </NavLink>
+            <NavLink href="/quotations?page=1">
               <Home size={20} />
               Quotations
             </NavLink>
@@ -111,10 +119,15 @@ export const UserMenu = () => {
         {isMenuOpen && (
           <div className="md:hidden">
             <div className="pt-2 pb-3 space-y-1">
+            <NavLink href="/">
+              <LayoutDashboard size={20} />
+              Dashboard
+            </NavLink>
               <NavLink href="/">
                 <Home size={20} />
                 Quotations
               </NavLink>
+              
             </div>
             <div className="pt-4 pb-3 border-t border-gray-200">
               <div className="flex items-center px-4">
