@@ -1,14 +1,14 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Sidebar from "../../../adminComponents/Sidebar.jsx";
+import Sidebar from "../../../components/adminComponents/Sidebar.jsx";
 import { useFormik } from "formik";
 import { userValidation } from "../../../Validation/UserValidation.jsx";
 import toast from "react-hot-toast";
-import Pagination from "../../../commonComponents/Pagination.jsx";
-import DownloadUsersPDFButton from "@/adminComponents/DownloadUsersPDFButton.jsx";
+import Pagination from "../../../components/commonComponents/Pagination.jsx";
+import DownloadUsersPDFButton from "@/components/adminComponents/DownloadUsersPDFButton.jsx";
 import { addUser, getUser } from "@/api/adminApi.js";
 import useDebounce from "@/hook/useDebounce.jsx";
-import UserListTable from "@/adminComponents/UserListTable.jsx";
+import UserListTable from "@/components/adminComponents/UserListTable.jsx";
 import { UserPlus, X, Download, Loader2 } from "lucide-react";
 import { useSelector } from "react-redux";
 

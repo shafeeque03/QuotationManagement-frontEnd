@@ -1,14 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Pagination from "@/commonComponents/Pagination";
+import Pagination from "@/components/commonComponents/Pagination";
 import useDebounce from "@/hook/useDebounce";
 import { Search, Calendar, SortDesc, Eye } from "lucide-react";
 import { filteredQuotation } from "@/api/adminApi";
-import Sidebar from "@/adminComponents/Sidebar";
-import DownloadQuotationsPDF from "@/adminComponents/DownloadQuotationsPDF";
+import Sidebar from "@/components/adminComponents/Sidebar";
+import DownloadQuotationsPDF from "@/components/adminComponents/DownloadQuotationsPDF";
 import { useSelector } from "react-redux";
-import QuotationTable from "@/adminComponents/QuotationTable";
+import QuotationTable from "@/components/adminComponents/QuotationTable";
 import { useSearchParams } from "next/navigation";
 
 const QuotationsTable = () => {

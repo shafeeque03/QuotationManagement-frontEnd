@@ -5,7 +5,7 @@ import { adminValidation } from "@/Validation/AdminValidation";
 import { useFormik } from "formik";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import HosterMenu from "@/hosterComponents/HosterMenu";
+import HosterMenu from "@/components/hosterComponents/HosterMenu";
 
 const AdminRegistrationPage = () => {
   const [showPassword, setShowPassword] = useState(false);

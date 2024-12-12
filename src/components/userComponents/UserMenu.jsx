@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Menu, X, User, LogOut, Home, Package, Settings,LayoutDashboard } from 'lucide-react';
 import Cookies from 'js-cookie';
@@ -29,22 +29,10 @@ export const UserMenu = () => {
   };
 
 
-  const searchParams = useSearchParams();
-
-  const currentPath = pathname + (searchParams.toString() ? `?${searchParams}` : "");
   
-  const NavLink = ({ href, children, className = "" }) => (
+  const NavLink = ({ href, children}) => (
     <Link 
       href={href} 
-      className={`
-        flex items-center gap-2 
-        px-3 py-2 
-        rounded-lg 
-        transition-all duration-300 
-        ${currentPath === href 
-          ? 'bg-indigo-100 text-indigo-600' 
-          : 'text-gray-600 hover:bg-gray-100 hover:text-indigo-600'}
-      `}
     >
       {children}
     </Link>
@@ -79,13 +67,31 @@ export const UserMenu = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-4 items-center">
-            <NavLink href="/">
+            <NavLink href="/" >
+          <div className={`flex items-center gap-2 
+        px-3 py-2 
+        rounded-lg 
+        transition-all duration-300
+        ${pathname=='/'
+          ? 'bg-indigo-100 text-indigo-600' 
+          : 'text-gray-600 hover:bg-gray-100 hover:text-indigo-600'}
+        `}>
               <LayoutDashboard size={20} />
               Dashboard
+              </div>
             </NavLink>
             <NavLink href="/quotations?page=1">
+            <div  className={`flex items-center gap-2 
+        px-3 py-2 
+        rounded-lg 
+        transition-all duration-300
+        ${pathname=='/quotations'
+          ? 'bg-indigo-100 text-indigo-600' 
+          : 'text-gray-600 hover:bg-gray-100 hover:text-indigo-600'}
+        `}>
               <Home size={20} />
               Quotations
+              </div>
             </NavLink>
 
             {/* Profile Dropdown */}

@@ -4,9 +4,9 @@ import { getServices } from "@/api/adminApi.js";
 import { Loader2 } from "lucide-react";
 import { useSelector } from "react-redux";
 import useDebounce from "@/hook/useDebounce.jsx";
-import Pagination from "@/commonComponents/Pagination.jsx";
-import UserMenu from "@/userComponents/UserMenu.jsx";
-import ServiceTable from "@/userComponents/ServiceTable";
+import Pagination from "@/components/commonComponents/Pagination.jsx";
+import UserMenu from "@/components/userComponents/UserMenu.jsx";
+import ServiceTable from "@/components/userComponents/ServiceTable";
 
 const Page = () => {
   const [allServices, setAllServices] = useState([]);

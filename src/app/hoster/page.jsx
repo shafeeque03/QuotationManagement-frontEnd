@@ -1,7 +1,7 @@
 "use client";
 import { getAdmins } from "@/api/hosterApi";
-import AdminCard from "@/hosterComponents/AdminCard";
-import HosterMenu from "@/hosterComponents/HosterMenu";
+import AdminCard from "@/components/hosterComponents/AdminCard";
+import HosterMenu from "@/components/hosterComponents/HosterMenu";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Loader2, ServerCrash, UserPlus } from "lucide-react";

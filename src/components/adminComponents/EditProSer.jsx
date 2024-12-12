@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { editProduct, editService } from "../api/adminApi";
+import { editProduct, editService } from "../../api/adminApi";
 import toast from "react-hot-toast";
 
 const EditProSer = ({ selectedItem, closeModal, updateItem  }) => {

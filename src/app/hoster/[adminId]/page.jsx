@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { getAdminDetails, changeAdminPassword, changAdminBlock } from "@/api/hosterApi";
 import toast from "react-hot-toast";
-import HosterMenu from "@/hosterComponents/HosterMenu";
+import HosterMenu from "@/components/hosterComponents/HosterMenu";
 
 const AdminDetailPage = ({params}) => {
   const router = useRouter();

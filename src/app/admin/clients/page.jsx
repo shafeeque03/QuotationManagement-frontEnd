@@ -1,11 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Sidebar from "../../../adminComponents/Sidebar.jsx";
-import Pagination from "../../../commonComponents/Pagination.jsx";
+import Sidebar from "../../../components/adminComponents/Sidebar.jsx";
+import Pagination from "../../../components/commonComponents/Pagination.jsx";
 import {getClinets } from "@/api/adminApi.js";
 import useDebounce from "@/hook/useDebounce.jsx";
-import ClientListTable from "@/adminComponents/ClientListTable.jsx";
-import DownloadClientsPDF from "@/adminComponents/DownloadClientsPDF.jsx";
+import ClientListTable from "@/components/adminComponents/ClientListTable.jsx";
+import DownloadClientsPDF from "@/components/adminComponents/DownloadClientsPDF.jsx";
 import { useSelector } from "react-redux";
 
 const Page = () => {

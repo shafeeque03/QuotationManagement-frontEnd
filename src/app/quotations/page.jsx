@@ -1,12 +1,12 @@
 "use client";
-import { UserMenu } from "@/userComponents/UserMenu";
+import { UserMenu } from "@/components/userComponents/UserMenu";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
-import Pagination from "@/commonComponents/Pagination";
+import Pagination from "@/components/commonComponents/Pagination";
 import useDebounce from "@/hook/useDebounce";
 import { Search, Calendar, SortDesc, PlusCircle } from "lucide-react";
-import QuotationCard from "@/userComponents/QuotationCard";
+import QuotationCard from "@/components/userComponents/QuotationCard";
 import { filteredData } from "@/api/userApi";
 import { useSearchParams } from "next/navigation";
 
@@ -21,7 +21,7 @@ const Quotations = () => {
   const [endDate, setEndDate] = useState("");
   const [totalPages, setTotalPages] = useState(1);
 
-  const ITEMS_PER_PAGE = 6;
+  const ITEMS_PER_PAGE = 12;
 
   const state = useSelector((state) => state);
   const user = state?.user?.user;

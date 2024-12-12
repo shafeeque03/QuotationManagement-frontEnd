@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
 import { Users, FileText, Settings, Box } from "lucide-react";
-import Sidebar from "../../adminComponents/Sidebar";
+import Sidebar from "../../components/adminComponents/Sidebar";
 import { dashboardData } from "@/api/adminApi";
 import { useSelector } from "react-redux";
 
@@ -89,7 +89,7 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
       <Sidebar />
       <main className="flex-grow p-6 lg:p-8 space-y-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

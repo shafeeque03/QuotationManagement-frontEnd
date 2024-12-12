@@ -4,9 +4,9 @@ import { getProducts } from "@/api/adminApi.js";
 import { Loader2 } from "lucide-react";
 import { useSelector } from "react-redux";
 import useDebounce from "@/hook/useDebounce.jsx";
-import Pagination from "@/commonComponents/Pagination.jsx";
-import UserMenu from "@/userComponents/UserMenu.jsx";
-import ProductTable from "@/userComponents/ProductTable";
+import Pagination from "@/components/commonComponents/Pagination.jsx";
+import UserMenu from "@/components/userComponents/UserMenu.jsx";
+import ProductTable from "@/components/userComponents/ProductTable";
 
 const Page = () => {
   const [allProducts, setAllProducts] = useState([]);

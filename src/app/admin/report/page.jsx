@@ -13,14 +13,16 @@ import {
   XCircle, 
   Clock 
 } from "lucide-react";
-import { totalReport } from "@/api/adminApi";
+import { totalReport,downloadReportByDateRange  } from "@/api/adminApi";
 import { useSelector } from "react-redux";
-import Sidebar from "@/adminComponents/Sidebar";
+import Sidebar from "@/components/adminComponents/Sidebar";
 
 const ReportsDashboard = () => {
   const [reportData, setReportData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const state = useSelector((state) => state);
   const admin = state?.admin?.admin;
   const adminId = admin?._id
@@ -45,6 +47,32 @@ const ReportsDashboard = () => {
     fetchReportData();
   }, [adminId]);
 
+  const downloadCSV = async () => {
+    if (!startDate || !endDate) {
+      alert('Please select both start and end dates');
+      return;
+    }
+
+    try {
+      const response = await downloadReportByDateRange(adminId, startDate, endDate);
+      
+      // Create a blob from the response data
+      const blob = new Blob([response.data], { type: 'text/csv' });
+      
+      // Create a link element and trigger download
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = `quotations_${startDate}_to_${endDate}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+    } catch (error) {
+      console.error('Download failed:', error);
+      alert('Failed to download CSV. Please try again.');
+    }
+  };
+
   const generateChartData = (data, valueKey = 'totalRevenue') => ({
     labels: data.map(item => item.name || item._id),
     datasets: [{
@@ -68,9 +96,6 @@ const ReportsDashboard = () => {
     }]
   });
 
-  const downloadCSV = () => {
-    alert('CSV Export functionality to be implemented');
-  };
 
   if (loading) {
     return (
@@ -126,12 +151,35 @@ const ReportsDashboard = () => {
               </h1>
               <p className="text-gray-500 mt-2">Comprehensive Business Performance Report</p>
             </div>
-            <button 
-              onClick={downloadCSV}
-              className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition transform hover:scale-105 shadow-lg"
-            >
-              <Download className="mr-2 h-5 w-5" /> Export Data
-            </button>
+            <div className="flex items-center space-x-4">
+              <div className="flex space-x-2">
+                <div className="flex flex-col">
+                  <label className="text-xs text-gray-600 mb-1">Start Date</label>
+                  <input 
+                    type="date" 
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="px-3 py-2 border rounded-lg text-sm"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="text-xs text-gray-600 mb-1">End Date</label>
+                  <input 
+                    type="date" 
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="px-3 py-2 border rounded-lg text-sm"
+                  />
+                </div>
+              </div>
+              <button 
+                onClick={downloadCSV}
+                disabled={!startDate || !endDate}
+                className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Download className="mr-2 h-5 w-5" /> Export Data
+              </button>
+            </div>
           </div>
 
           {/* Key Metrics */}

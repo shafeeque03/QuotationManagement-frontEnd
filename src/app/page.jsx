@@ -8,7 +8,7 @@ import {
   PlusCircle,
   Eye,
 } from "lucide-react";
-import UserMenu from "@/userComponents/UserMenu";
+import UserMenu from "@/components/userComponents/UserMenu";
 import { userDashboardData } from "@/api/userApi";
 import { useSelector } from "react-redux";
 

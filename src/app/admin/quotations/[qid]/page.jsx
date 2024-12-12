@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { quotationDetails } from "@/api/userApi";
-import Sidebar from "@/adminComponents/Sidebar";
+import Sidebar from "@/components/adminComponents/Sidebar";
 import toast from "react-hot-toast";
-import DownloadQuotation from "@/adminComponents/DownloadQuotation";
+import DownloadQuotation from "@/components/adminComponents/DownloadQuotation";
 import {
   FileTextIcon,
   UserIcon,
@@ -12,7 +12,7 @@ import {
   CogIcon,
   DollarSignIcon,
 } from "lucide-react";
-import QuotationUploads from "@/adminComponents/QuotationUploads";
+import QuotationUploads from "@/components/adminComponents/QuotationUploads";
 
 const Page = ({ params }) => {
   const { qid } = React.use(params);

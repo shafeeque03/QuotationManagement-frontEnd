@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Sidebar from "../../../adminComponents/Sidebar.jsx";
-import Pagination from "../../../commonComponents/Pagination.jsx";
-import ServiceTable from "@/adminComponents/ServiceTable.jsx";
+import Sidebar from "../../../components/adminComponents/Sidebar.jsx";
+import Pagination from "../../../components/commonComponents/Pagination.jsx";
+import ServiceTable from "@/components/adminComponents/ServiceTable.jsx";
 import { getServices } from "@/api/adminApi.js";
 import { Loader2 } from "lucide-react";
 import { useSelector } from "react-redux";

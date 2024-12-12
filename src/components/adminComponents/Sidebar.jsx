@@ -32,9 +32,6 @@ const Sidebar = () => {
   const state = useSelector((state) => state);
   const admin = state?.admin?.admin;
 
-  const searchParams = useSearchParams();
-
-  const currentPath = pathname + (searchParams.toString() ? `?${searchParams}` : "");
 
   useEffect(() => {
     // Mark as hydrated after mounting
@@ -50,7 +47,7 @@ const Sidebar = () => {
   const menuItems = [
     { path: "/admin", icon: LayoutDashboard, label: "Dashboard" },
     { path: "/admin/users", icon: Users, label: "Users" },
-    { path: "/admin/quotations?page=1", icon: FileText, label: "Quotations" },
+    { path: "/admin/quotations", icon: FileText, label: "Quotations" },
     { path: "/admin/clients", icon: Building2, label: "Clients" },
     { path: "/admin/products", icon: Package, label: "Product" },
     { path: "/admin/services", icon: Settings, label: "Service" },
@@ -83,7 +80,7 @@ const Sidebar = () => {
           <div className="flex items-center gap-2">
             <Boxes className="w-8 h-8 text-indigo-600" />
             {/* Render admin.name only after hydration */}
-            <h5 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-transparent bg-clip-text">
+            <h5 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-transparent bg-clip-text">
               {isHydrated ? admin?.name || "Admin" : "Loading..."}
             </h5>
           </div>
@@ -101,7 +98,8 @@ const Sidebar = () => {
         <nav className="px-4 pb-6 flex flex-col h-[calc(100vh-120px)]">
           <div className="space-y-2 flex-grow">
             {menuItems.map((item) => {
-              const isActive = currentPath === item.path;
+              const basePath = pathname.split("?")[0];
+              let isActive = basePath === item.path;
               return (
                 <Link key={item.path} href={item.path}>
                   <div

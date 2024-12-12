@@ -7,7 +7,7 @@ import {
   getClients,
   getProAndSer,
 } from "../../api/userApi";
-import { UserMenu } from "../../userComponents/UserMenu";
+import { UserMenu } from "../../components/userComponents/UserMenu";
 import { useSelector } from "react-redux";
 import {
   CheckIcon,
@@ -18,12 +18,12 @@ import {
 
 import toast from "react-hot-toast";
 import useDebounce from "@/hook/useDebounce";
-import SelectClient from "@/userComponents/SelectClient";
-import SelectFileSection from "@/userComponents/SelectFileSection";
-import FinalSection from "@/userComponents/FinalSection";
-import AddClientModal from "@/userComponents/AddClientModal";
-import ProductAddSection from "@/userComponents/ProductAddSection";
-import ServiceAddSection from "@/userComponents/ServiceAddSection";
+import SelectClient from "@/components/userComponents/SelectClient";
+import SelectFileSection from "@/components/userComponents/SelectFileSection";
+import FinalSection from "@/components/userComponents/FinalSection";
+import AddClientModal from "@/components/userComponents/AddClientModal";
+import ProductAddSection from "@/components/userComponents/ProductAddSection";
+import ServiceAddSection from "@/components/userComponents/ServiceAddSection";
 
 const CreateQuotation = () => {
   const state = useSelector((state) => state);

@@ -172,3 +172,40 @@ export const totalReport = async(adminId)=>{
   const data = await adminAxiosInstance.get(`/totalReport/${adminId}`);
   return data
 }
+
+export const downloadReportByDateRange = async (adminId, startDate, endDate) => {
+  try {
+    const response = await adminAxiosInstance.get(`/download-report/${adminId}?startDate=${startDate}&endDate=${endDate}`, {
+      responseType: 'blob' // Keep this as blob
+    });
+
+    // Create a blob from the response data
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+    
+    // Create a link element and trigger download
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = `quotations_${startDate}_to_${endDate}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const updateAdminProfile = async(adminId,values)=>{
+  const data = await adminAxiosInstance.post('/updateProfile',{adminId,values});
+  return data
+}
+
+export const updateAdminPassword = async(adminId,password)=>{
+  const data = await adminAxiosInstance.post('/updateProfilePassword',{adminId,password})
+}
+
+export const updateAdminLogo = async(adminId,file)=>{
+  console.log(adminId,file,"callooooo")
+  const data = await adminAxiosInstance.post('/updateLogo',{adminId,file});
+  return data
+}
