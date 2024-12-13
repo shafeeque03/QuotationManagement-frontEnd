@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 
 
-const page = () => {
+const Page = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -109,4 +109,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

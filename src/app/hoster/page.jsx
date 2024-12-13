@@ -80,7 +80,7 @@ const Page = () => {
               No administrators found
             </p>
             <p className="text-gray-500">
-              Click "Add New Admin" to get started
+              Click Add New Admin to get started
             </p>
           </div>
         ) : (

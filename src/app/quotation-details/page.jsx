@@ -1,10 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { UserMenu } from "../../components/userComponents/UserMenu";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { quotationDetails, quotationStatusChange } from "../../api/userApi";
 import toast from "react-hot-toast";
 import QuotationFiles from "@/components/userComponents/QuotationFiles";
+import Link from "next/link";
+import { PDFViewer } from "@/components/commonComponents/PDFViewer";
+
 
 const Page = () => {
   const [quotation, setQuotation] = useState(null);
@@ -17,6 +20,8 @@ const Page = () => {
 
   const params = useSearchParams();
   const qid = params.get("qid");
+
+  const router = useRouter();
 
   useEffect(() => {
     if (!qid) {
@@ -68,6 +73,10 @@ const Page = () => {
     handleStatusChange("accepted");
     setIsConfirmModalOpen(false);
   };
+  const handleViewQuotation = (id) => {
+    router.push(`/quotation-details/${id}`);
+  };
+  const [showPDF, setShowPDF] = useState(false);
 
   if (loading) {
     return (
@@ -102,6 +111,12 @@ const Page = () => {
               className="cursor-pointer bg-blue-500/10 text-blue-600 border border-blue-500/30 mt-6 px-6 py-3 rounded-full hover:shadow-lg hover:scale-105 transition"
             >
               View Proposal
+            </div>
+            <div
+              onClick={() =>handleViewQuotation(quotation._id) }
+              className="cursor-pointer bg-orange-500/10 text-orange-600 border border-orange-500/30 mt-6 px-6 py-3 rounded-full hover:shadow-lg hover:scale-105 transition"
+            >
+              Update Quotation
             </div>
           </div>
         </div>
@@ -342,6 +357,20 @@ const Page = () => {
             </div>
           </div>
         )}
+
+{showPDF && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+          <div className="bg-white p-4 rounded-lg shadow-lg max-w-4xl w-full h-[90vh]">
+            <button
+              onClick={() => setShowPDF(false)}
+              className="text-red-500 hover:text-red-700 absolute top-4 right-4 font-bold"
+            >
+              Close
+            </button>
+            <PDFViewer url={quotation.proposal} />
+          </div>
+        </div>
+      )}
 
         {/* Confirmation Modal */}
         {isConfirmModalOpen && (

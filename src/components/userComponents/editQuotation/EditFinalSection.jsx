@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const FinalSection = ({
+const EditFinalSection = ({
   CheckIcon,
   selectedProducts,
   selectedServices,
@@ -10,8 +10,6 @@ const FinalSection = ({
   totalAmount,
   setStep,
   clientIs,
-  file,
-  removeFile,
   tax,
   setTax,
   subTotal,
@@ -165,17 +163,17 @@ const FinalSection = ({
                   </td>
                   <td className="py-3 px-4 text-center">
                     <p className="text-gray-500">
-                      {product.ProDescription || "No description"}
+                      {product.description || "No description"}
                     </p>
                   </td>
                   <td className="py-3 px-4 text-center">
-                    {product.ProPrice.toFixed(2)}
+                    {product.price.toFixed(2)}
                   </td>
                   <td className="py-3 px-4 text-center">
-                    {product.ProQuantity}
+                    {product.quantity}
                   </td>
                   <td className="py-3 px-4 text-center font-semibold">
-                    {(product.ProPrice * product.ProQuantity).toFixed(2)}
+                    {(product.price * product.quantity).toFixed(2)}
                   </td>
                 </tr>
               ))}
@@ -207,47 +205,17 @@ const FinalSection = ({
                   </td>
                   <td className="py-3 px-4 text-left">
                     <p className="text-gray-500">
-                      {service.SerDescription || "No description"}
+                      {service.description || "No description"}
                     </p>
                   </td>
                   <td className="py-3 px-4 text-right font-semibold">
-                    {service.SerPrice.toFixed(2)}
+                    {service.price.toFixed(2)}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-      </div>
-
-      {/* Files Section */}
-      <div className="mb-6 bg-gray-50 p-5 rounded-lg">
-        <h3 className="text-lg font-semibold mb-4">Selected Files</h3>
-        {file.length > 0 ? (
-          <ul className="space-y-2">
-            {file.map((val, index) => (
-              <li
-                key={index}
-                className="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm"
-              >
-                <span className="text-sm text-gray-700 truncate max-w-[70%]">
-                  {val.name}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => removeFile(index)}
-                  className="text-red-500 hover:text-red-600 text-sm bg-red-50 px-3 py-1 rounded-full"
-                >
-                  Remove
-                </button>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-sm text-gray-500 text-center">
-            No files selected.
-          </p>
-        )}
       </div>
 
       {/* Expiration Date */}
@@ -332,7 +300,7 @@ const FinalSection = ({
       <div className="flex justify-between mt-8">
         <button
           type="button"
-          onClick={() => setStep(5)}
+          onClick={() => setStep(4)}
           className="px-6 py-3 border-2 border-gray-300 text-gray-600 rounded-lg hover:bg-gray-100 transition"
         >
           Previous
@@ -343,7 +311,7 @@ const FinalSection = ({
           className="px-6 py-3 bg-green-500 text-white rounded-lg 
           disabled:opacity-50 hover:bg-green-600 transition flex items-center"
         >
-          Create Quotation
+          Update Quotation
           <CheckIcon className="ml-2 w-5 h-5" />
         </button>
       </div>
@@ -351,4 +319,4 @@ const FinalSection = ({
   );
 };
 
-export default FinalSection;
+export default EditFinalSection;

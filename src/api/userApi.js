@@ -21,6 +21,11 @@ export const addQuotation = async(quotationData,adminId)=>{
     return data
 }
 
+export const editQuotation = async(quotationData,qid)=>{
+    const data = await userAxiosInstance.post('/editQuotation',{...quotationData,qid});
+    return data
+}
+
 export const quotationDetails = async(qid)=>{
     const data = await userAxiosInstance.get(`quotationDetails/${qid}`);
     return data

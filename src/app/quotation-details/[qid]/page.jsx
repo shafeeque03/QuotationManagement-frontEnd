@@ -3,11 +3,11 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   addClient,
-  addQuotation,
+  editQuotation,
   getClients,
   getProAndSer,
-} from "../../api/userApi";
-import { UserMenu } from "../../components/userComponents/UserMenu";
+  quotationDetails,
+} from "../../../api/userApi.js";
 import { useSelector } from "react-redux";
 import {
   CheckIcon,
@@ -15,17 +15,19 @@ import {
   XMarkIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
+editQuotation
 
 import toast from "react-hot-toast";
 import useDebounce from "@/hook/useDebounce";
-import SelectClient from "@/components/userComponents/SelectClient";
-import SelectFileSection from "@/components/userComponents/SelectFileSection";
-import FinalSection from "@/components/userComponents/FinalSection";
 import AddClientModal from "@/components/userComponents/AddClientModal";
-import ProductAddSection from "@/components/userComponents/ProductAddSection";
-import ServiceAddSection from "@/components/userComponents/ServiceAddSection";
+import UserMenu from "@/components/userComponents/UserMenu.jsx";
+import EditSelectClient from "@/components/userComponents/editQuotation/EditSelectClient.jsx";
+import EditProductAddSection from "@/components/userComponents/editQuotation/EditProductAddSection.jsx";
+import EditServiceAddSection from "@/components/userComponents/editQuotation/EditServiceAddSection.jsx";
+import EditFinalSection from "@/components/userComponents/editQuotation/EditFinalSection.jsx";
 
-const CreateQuotation = () => {
+const UpdateQuotation = ({ params }) => {
+  const { qid } = React.use(params);
   const state = useSelector((state) => state);
   const user = state?.user?.user;
   const adminId = user?.adminIs;
@@ -42,6 +44,7 @@ const CreateQuotation = () => {
   const [clientIs, setClientIs] = useState(null);
   const [clients, setClients] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [quotation, setQuotation] = useState(null);
   const [step, setStep] = useState(1); // Multi-step form
   const [newClient, setNewClient] = useState({
     name: "",
@@ -49,23 +52,34 @@ const CreateQuotation = () => {
     address: "",
     phone: "",
   });
-  const [tax,setTax] = useState(0);
-  const [taxName,setTaxName] = useState("")
-  const [subTotal,setSubtotal] = useState(0)
+  const [tax, setTax] = useState(0);
+  const [taxName, setTaxName] = useState("");
+  const [subTotal, setSubtotal] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
-  const [showPrice, setShowPrice] = useState(true)
+  const [showPrice, setShowPrice] = useState(true);
   const debouncedSearchTerm = useDebounce(searchQuery, 600);
-  const [emails,setEmails] = useState([])
+  const [emails, setEmails] = useState([]);
 
   const today = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
-        const [clientsRes, proAndSerRes] = await Promise.all([
+        const [qtns,clientsRes, proAndSerRes] = await Promise.all([
+          quotationDetails(qid),
           getClients(adminId),
           getProAndSer(adminId),
         ]);
+        setQuotation(qtns?.data?.quotation);
+        setClientId(qtns?.data?.quotation?.client._id);
+        setClientIs(qtns?.data?.quotation?.client);
+        setSelectedProducts(qtns?.data?.quotation?.products);
+        setSelectedServices(qtns?.data?.quotation?.services);
+        setExpireDate(qtns?.data?.quotation?.expireDate);
+        setTotalAmount(qtns?.data?.quotation?.totalAmount);
+        setTax(qtns?.data?.quotation?.tax);
+        setTaxName(qtns?.data?.quotation?.taxName);
+        setSubtotal(qtns?.data?.quotation?.subTotal)
         setClients(clientsRes.data.clients || []);
         setAllProducts(proAndSerRes.data.products);
         setAllServices(proAndSerRes.data.services);
@@ -77,6 +91,8 @@ const CreateQuotation = () => {
 
     fetchInitialData();
   }, []);
+
+
 
   // Product Form State
   const [productName, setProductName] = useState("");
@@ -91,8 +107,7 @@ const CreateQuotation = () => {
 
   const [termsAndConditions, setTermsAndConditions] = useState("");
   const [description, setDescription] = useState("");
-  const [title, setTitle] = useState("")
-
+  const [title, setTitle] = useState("");
 
   // Add New Product
   const handleAddProduct = () => {
@@ -103,9 +118,9 @@ const CreateQuotation = () => {
 
     const newProduct = {
       name: productName,
-      ProDescription,
-      ProQuantity,
-      ProPrice,
+      description:ProDescription,
+      quantity:ProQuantity,
+      price:ProPrice,
     };
 
     setSelectedProducts((prev) => [...prev, newProduct]);
@@ -123,8 +138,8 @@ const CreateQuotation = () => {
 
     const newService = {
       name: serviceName,
-      SerDescription,
-      SerPrice,
+      description: SerDescription,
+      price: SerPrice,
     };
 
     setSelectedServices((prev) => [...prev, newService]);
@@ -144,16 +159,16 @@ const CreateQuotation = () => {
 
   useEffect(() => {
     const productTotal = selectedProducts.reduce(
-      (total, product) => total + product.ProPrice * product.ProQuantity,
+      (total, product) => total + product.price * product.quantity,
       0
     );
     const serviceTotal = selectedServices.reduce(
-      (total, service) => total + service.SerPrice,
+      (total, service) => total + service.price,
       0
     );
     setTotalAmount(productTotal + serviceTotal);
-    setSubtotal(totalAmount+(tax/100)* totalAmount)
-  }, [selectedProducts, selectedServices,totalAmount,tax]);
+    setSubtotal(totalAmount + (tax / 100) * totalAmount);
+  }, [selectedProducts, selectedServices, totalAmount, tax]);
 
   const handleAddClient = async () => {
     // Check for blank name or email
@@ -166,7 +181,7 @@ const CreateQuotation = () => {
       const res = await addClient(newClient, adminId);
       setClients((prev) => [...prev, res.data.client]);
       setClientId(res.data.client._id);
-      setClientIs(res.data.client)
+      setClientIs(res.data.client);
       setModalOpen(false);
       toast.success("Client added successfully!");
 
@@ -183,63 +198,32 @@ const CreateQuotation = () => {
     }
   };
 
-  const [file, setFile] = useState([]);
-  const handleFileChange = (e) => {
-    const selectedFiles = Array.from(e.target.files);
-
-    // Check if the total number of files exceeds the limit
-    if (file.length + selectedFiles.length > 5) {
-      toast.error("You can upload a maximum of 5 files.");
-      return;
-    }
-
-    // Convert files to Base64 and update state
-    setFilesToBase(selectedFiles);
-  };
-
-  const removeFile = (index) => {
-    setFile((prevFiles) => prevFiles.filter((_, i) => i !== index));
-  };
-
-  const setFilesToBase = (files) => {
-    files.forEach((fileItem) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(fileItem);
-
-      reader.onloadend = () => {
-        setFile((prev) => [
-          ...prev,
-          { name: fileItem.name, base64: reader.result },
-        ]);
-      };
-    });
-  };
+  console.log(emails,"jiji")
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (selectedProducts.length == 0 && selectedServices.length == 0) {
       return toast.error("Select Product or Service");
     }
-    if(emails.length==0){
+    if (emails.length == 0) {
       return toast.error("Please add email");
     }
     const quotationData = {
       products: selectedProducts.map((p) => ({
         name: p.name,
-        description: p.ProDescription,
-        quantity: p.ProQuantity,
-        price: p.ProPrice,
+        description: p.description,
+        quantity: p.quantity,
+        price: p.price,
       })),
       services: selectedServices.map((s) => ({
         name: s.name,
-        description: s.SerDescription,
-        price: s.SerPrice,
+        description: s.description,
+        price: s.price,
       })),
       totalAmount,
       expireDate,
       client: clientId,
       createdBy: user?._id,
-      file,
       termsAndConditions,
       description,
       title,
@@ -247,14 +231,14 @@ const CreateQuotation = () => {
       taxName,
       subTotal,
       showPrice,
-      emails
+      emails,
     };
 
     try {
-      const res = await addQuotation(quotationData, adminId);
+      const res = await editQuotation(quotationData, qid);
       if (res?.status === 200) {
         toast.success(res?.data?.message);
-        // router.push("/");
+        router.push(`/quotation-details?qid=${qid}`);
       }
     } catch (error) {
       toast.error(error.response?.data?.message);
@@ -273,7 +257,7 @@ const CreateQuotation = () => {
         return (
           <div className="space-y-6">
             {/* Client Selection */}
-            <SelectClient
+            <EditSelectClient
               UserIcon={UserIcon}
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
@@ -292,7 +276,7 @@ const CreateQuotation = () => {
         return (
           <div className="space-y-6">
             {/* Product Form */}
-            <ProductAddSection
+            <EditProductAddSection
               productName={productName}
               setProductName={setProductName}
               ProDescription={ProDescription}
@@ -314,7 +298,7 @@ const CreateQuotation = () => {
         return (
           <div className="space-y-6">
             {/* File Section */}
-            <ServiceAddSection
+            <EditServiceAddSection
               serviceName={serviceName}
               setServiceName={setServiceName}
               SerDescription={SerDescription}
@@ -333,23 +317,9 @@ const CreateQuotation = () => {
       case 4:
         return (
           <div className="space-y-6">
-            {/* File Section */}
-            <SelectFileSection
-              CheckIcon={CheckIcon}
-              handleFileChange={handleFileChange}
-              file={file}
-              setStep={setStep}
-              removeFile={removeFile}
-            />
-          </div>
-        );
-
-      case 5:
-        return (
-          <div className="space-y-6">
             <h2 className="text-xl font-semibold mb-4 flex items-center">
-                  For PDF purpose
-                </h2>
+              For PDF purpose
+            </h2>
             {/* Terms and Conditions Section */}
             <div className="mt-4">
               <label
@@ -408,14 +378,14 @@ const CreateQuotation = () => {
             <div className="flex mt-3 justify-between">
               <button
                 type="button"
-                onClick={() => setStep(4)}
+                onClick={() => setStep(3)}
                 className="px-6 py-2 border rounded-lg hover:bg-gray-100 transition"
               >
                 Previous
               </button>
               <button
                 type="button"
-                onClick={() => setStep(6)}
+                onClick={() => setStep(5)}
                 className="px-6 py-2 bg-indigo-500 text-white rounded-lg 
                               disabled:opacity-50 hover:bg-indigo-600 transition"
               >
@@ -425,11 +395,11 @@ const CreateQuotation = () => {
           </div>
         );
 
-      case 6:
+      case 5:
         return (
           <div className="space-y-6">
             {/* Final Review Section */}
-            <FinalSection
+            <EditFinalSection
               CheckIcon={CheckIcon}
               selectedProducts={selectedProducts}
               selectedServices={selectedServices}
@@ -439,8 +409,6 @@ const CreateQuotation = () => {
               totalAmount={totalAmount}
               setStep={setStep}
               clientIs={clientIs}
-              file={file}
-              removeFile={removeFile}
               tax={tax}
               setTax={setTax}
               subTotal={subTotal}
@@ -485,7 +453,7 @@ const CreateQuotation = () => {
           <div className="bg-white shadow-2xl rounded-xl p-12">
             {/* Progress Indicator */}
             <div className="flex justify-between mb-12">
-              {[1, 2, 3, 4, 5, 6].map((num) => (
+              {[1, 2, 3, 4, 5].map((num) => (
                 <div
                   key={num}
                   className={`
@@ -508,4 +476,4 @@ const CreateQuotation = () => {
   );
 };
 
-export default CreateQuotation;
+export default UpdateQuotation;
