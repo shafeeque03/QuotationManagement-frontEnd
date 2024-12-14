@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 
-const EditFinalSection = ({
+const FinalSection = ({
   CheckIcon,
   selectedProducts,
   selectedServices,
@@ -18,10 +18,17 @@ const EditFinalSection = ({
   showPrice,
   setShowPrice,
   emails,
-  setEmails
+  setEmails,
+  submited,
+  from,
+  setFrom,
+  logo,
+  setLogo,
 }) => {
   const [newEmail, setNewEmail] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [isEditingFrom, setIsEditingFrom] = useState(false);
+  const fileInputRef = useRef(null);
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -52,6 +59,218 @@ const EditFinalSection = ({
   const handleRemoveEmail = (emailToRemove) => {
     setEmails(emails.filter(email => email !== emailToRemove));
   };
+
+  const handleFromChange = (field, value) => {
+    setFrom(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const renderFromDetails = () => {
+    if (isEditingFrom) {
+      return (
+        <div className="bg-gray-50 p-5 rounded-lg mb-6">
+          <h3 className="text-lg font-semibold mb-4 text-gray-700">
+            Edit Sender Information
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-gray-600 mb-2">Name</label>
+              <input
+                type="text"
+                value={from.name}
+                onChange={(e) => handleFromChange('name', e.target.value)}
+                className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="Your Name"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-600 mb-2">Email</label>
+              <input
+                type="email"
+                value={from.email}
+                onChange={(e) => handleFromChange('email', e.target.value)}
+                className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="Your Email"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-600 mb-2">Phone</label>
+              <input
+                type="tel"
+                value={from.phone}
+                onChange={(e) => handleFromChange('phone', e.target.value)}
+                className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="Your Phone Number"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-600 mb-2">Address</label>
+              <input
+                type="text"
+                value={from.address}
+                onChange={(e) => handleFromChange('address', e.target.value)}
+                className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="Your Address"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end mt-4 space-x-3">
+            <button
+              type="button"
+              onClick={() => setIsEditingFrom(false)}
+              className="px-4 py-2 text-gray-600 rounded-lg hover:bg-gray-100 transition"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsEditingFrom(false)}
+              className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="mb-6 bg-gray-50 p-5 rounded-lg">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold text-gray-700">
+            Sender Information
+          </h3>
+          <button
+            type="button"
+            onClick={() => setIsEditingFrom(true)}
+            className="text-blue-500 hover:text-blue-600 text-sm bg-blue-50 px-3 py-1 rounded-full"
+          >
+            Edit
+          </button>
+        </div>
+        {from.name || from.email || from.phone || from.address ? (
+          <div className="grid grid-cols-2 gap-3">
+            {from.name && (
+              <>
+                <div className="text-gray-600">Name:</div>
+                <div className="font-medium">{from.name}</div>
+              </>
+            )}
+            {from.email && (
+              <>
+                <div className="text-gray-600">Email:</div>
+                <div className="font-medium">{from.email}</div>
+              </>
+            )}
+            {from.phone && (
+              <>
+                <div className="text-gray-600">Phone:</div>
+                <div className="font-medium">{from.phone}</div>
+              </>
+            )}
+            {from.address && (
+              <>
+                <div className="text-gray-600">Address:</div>
+                <div className="font-medium">{from.address}</div>
+              </>
+            )}
+          </div>
+        ) : (
+          <p className="text-sm text-gray-500 text-center">
+            No sender information added.
+          </p>
+        )}
+      </div>
+    );
+  };
+
+
+  const handleLogoUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Check file type
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        alert('Please upload a valid image file (JPEG, PNG, GIF, SVG, WEBP)');
+        return;
+      }
+
+      // Check file size (e.g., max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File size should be less than 5MB');
+        return;
+      }
+
+      // Create a file reader to display the image
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setLogo({
+          file: file,
+          preview: reader.result
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveLogo = () => {
+    setLogo(null);
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const renderLogoSection = () => {
+    return (
+      <div className="mb-6 bg-gray-50 p-5 rounded-lg">
+        <h3 className="text-lg font-semibold mb-4 text-gray-700">
+          Company Logo
+        </h3>
+        <div className="flex items-center space-x-4">
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleLogoUpload}
+            accept="image/jpeg,image/png,image/gif,image/svg+xml,image/webp"
+            className="hidden"
+            id="logo-upload"
+          />
+          <label 
+            htmlFor="logo-upload" 
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition cursor-pointer"
+          >
+            Upload Logo
+          </label>
+          
+          {logo && (
+            <div className="flex items-center space-x-4">
+              <div className="w-24 h-24 border-2 border-gray-300 rounded-lg overflow-hidden">
+                <img 
+                  src={logo.preview} 
+                  alt="Company Logo" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={handleRemoveLogo}
+                className="text-red-500 hover:text-red-600 text-sm bg-red-50 px-3 py-1 rounded-full"
+              >
+                Remove
+              </button>
+            </div>
+          )}
+        </div>
+        <p className="text-xs text-gray-500 mt-2">
+          Accepted formats: JPEG, PNG, GIF, SVG, WEBP (Max 5MB)
+        </p>
+      </div>
+    );
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-2xl">
       <h2 className="text-2xl font-bold mb-6 pb-3 border-b-2 border-gray-200 flex items-center">
@@ -59,7 +278,8 @@ const EditFinalSection = ({
         Review Quotation
       </h2>
 
-      
+      {renderLogoSection()}
+      {renderFromDetails()}
 
       {/* Client Details */}
       <div className="mb-6 bg-gray-50 p-5 rounded-lg">
@@ -218,6 +438,7 @@ const EditFinalSection = ({
         </div>
       </div>
 
+
       {/* Expiration Date */}
       <div className="mb-6">
         <label className="block text-gray-700 font-semibold mb-3">
@@ -307,11 +528,11 @@ const EditFinalSection = ({
         </button>
         <button
           type="submit"
-          disabled={!expireDate}
+          disabled={!expireDate||submited}
           className="px-6 py-3 bg-green-500 text-white rounded-lg 
           disabled:opacity-50 hover:bg-green-600 transition flex items-center"
         >
-          Update Quotation
+          {submited?'Creating..':'Submit'}
           <CheckIcon className="ml-2 w-5 h-5" />
         </button>
       </div>
@@ -319,4 +540,4 @@ const EditFinalSection = ({
   );
 };
 
-export default EditFinalSection;
+export default FinalSection;

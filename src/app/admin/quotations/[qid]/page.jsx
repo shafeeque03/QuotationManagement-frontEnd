@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { quotationDetails } from "@/api/userApi";
 import Sidebar from "@/components/adminComponents/Sidebar";
 import toast from "react-hot-toast";
 import DownloadQuotation from "@/components/adminComponents/DownloadQuotation";
@@ -13,6 +12,7 @@ import {
   DollarSignIcon,
 } from "lucide-react";
 import QuotationUploads from "@/components/adminComponents/QuotationUploads";
+import { quotationDetails } from "@/api/adminApi";
 
 const Page = ({ params }) => {
   const { qid } = React.use(params);
@@ -152,19 +152,56 @@ const Page = ({ params }) => {
             </div>
 
             {/* Client Details */}
-            <div className="bg-white rounded-xl shadow-md p-6">
-              <div className="flex items-center mb-4 space-x-3">
-                <UserIcon className="text-indigo-600 w-6 h-6" />
-                <h2 className="text-xl font-semibold">Client Details</h2>
+            <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+            <h3 className="text-xl font-semibold text-gray-800 border-b border-gray-100 pb-2 mb-4">
+              Client Information
+            </h3>
+            <div className="space-y-3">
+              <div>
+                <h4 className="text-lg font-semibold text-gray-700 mb-2">
+                  Client Details
+                </h4>
+                <p className="text-gray-700">
+                  <span className="font-medium text-gray-900">Name:</span>{" "}
+                  {quotation.client.name}
+                </p>
+                <p className="text-gray-700">
+                  <span className="font-medium text-gray-900">Email:</span>{" "}
+                  {quotation.client.email}
+                </p>
+                <p className="text-gray-700">
+                  <span className="font-medium text-gray-900">Phone:</span>{" "}
+                  {quotation.client.phone}
+                </p>
+                <p className="text-gray-700">
+                  <span className="font-medium text-gray-900">Address:</span>{" "}
+                  {quotation.client.address}
+                </p>
               </div>
-              <div className="space-y-2">
-                <p className="font-medium text-lg">{quotation.client?.name}</p>
-                <p className="text-gray-600">{quotation.client?.email}</p>
-                <p className="text-gray-600">{quotation.client?.phone}</p>
-                <p className="text-gray-600">{quotation.client?.address}</p>
-                
+
+              <div className="border-t border-gray-200 pt-4">
+                <h4 className="text-lg font-semibold text-gray-700 mb-2">
+                  Quotation From
+                </h4>
+                <p className="text-gray-700">
+                  <span className="font-medium text-gray-900">Name:</span>{" "}
+                  {quotation.from.name}
+                </p>
+                <p className="text-gray-700">
+                  <span className="font-medium text-gray-900">Email:</span>{" "}
+                  {quotation.from.email}
+                </p>
+                <p className="text-gray-700">
+                  <span className="font-medium text-gray-900">Phone:</span>{" "}
+                  {quotation.from.phone}
+                </p>
+                <p className="text-gray-700">
+                  <span className="font-medium text-gray-900">Address:</span>{" "}
+                  {quotation.from.address}
+                </p>
               </div>
             </div>
+          </div>
             
           </div>
 

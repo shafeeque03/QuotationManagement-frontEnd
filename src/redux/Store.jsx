@@ -1,5 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { combineReducers } from '@reduxjs/toolkit';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import userReducer from './slice/UserSlice';
 import adminReducer from './slice/AdminSlice';
 import hosterReducer from './slice/HosterSlice';
@@ -14,6 +13,7 @@ const reducer = combineReducers({
 // Load state from localStorage
 const loadStateFromLocalStorage = () => {
   try {
+    if (typeof window === 'undefined') return undefined; // Ensure it runs only on the client side
     const serializedState = localStorage.getItem('reduxState');
     return serializedState ? JSON.parse(serializedState) : undefined;
   } catch (e) {
@@ -25,15 +25,17 @@ const loadStateFromLocalStorage = () => {
 // Save state to localStorage
 const saveStateToLocalStorage = (state) => {
   try {
-    const serializedState = JSON.stringify(state);
-    localStorage.setItem('reduxState', serializedState);
+    if (typeof window !== 'undefined') {
+      const serializedState = JSON.stringify(state);
+      localStorage.setItem('reduxState', serializedState);
+    }
   } catch (e) {
     console.warn('Failed to save state to localStorage:', e);
   }
 };
 
-// Load persisted state
-const preloadedState = loadStateFromLocalStorage();
+// Load persisted state (only on client side)
+const preloadedState = typeof window !== 'undefined' ? loadStateFromLocalStorage() : undefined;
 
 // Create store
 const store = configureStore({
@@ -45,9 +47,11 @@ const store = configureStore({
     }),
 });
 
-// Save state to localStorage whenever it changes
-store.subscribe(() => {
-  saveStateToLocalStorage(store.getState());
-});
+// Save state to localStorage whenever it changes (only on client side)
+if (typeof window !== 'undefined') {
+  store.subscribe(() => {
+    saveStateToLocalStorage(store.getState());
+  });
+}
 
 export default store;

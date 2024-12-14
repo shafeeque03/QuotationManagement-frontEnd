@@ -15,7 +15,6 @@ import {
   XMarkIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
-editQuotation
 
 import toast from "react-hot-toast";
 import useDebounce from "@/hook/useDebounce";
@@ -52,8 +51,18 @@ const UpdateQuotation = ({ params }) => {
     address: "",
     phone: "",
   });
+  const [from, setFrom] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+  });
+
+  const [logo, setLogo] = useState(null);
+
   const [tax, setTax] = useState(0);
   const [taxName, setTaxName] = useState("");
+  const [submited, setSubmited] = useState(false);
   const [subTotal, setSubtotal] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [showPrice, setShowPrice] = useState(true);
@@ -77,6 +86,7 @@ const UpdateQuotation = ({ params }) => {
         setSelectedServices(qtns?.data?.quotation?.services);
         setExpireDate(qtns?.data?.quotation?.expireDate);
         setTotalAmount(qtns?.data?.quotation?.totalAmount);
+        setFrom(qtns?.data?.quotation?.from)
         setTax(qtns?.data?.quotation?.tax);
         setTaxName(qtns?.data?.quotation?.taxName);
         setSubtotal(qtns?.data?.quotation?.subTotal)
@@ -198,7 +208,6 @@ const UpdateQuotation = ({ params }) => {
     }
   };
 
-  console.log(emails,"jiji")
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -207,6 +216,9 @@ const UpdateQuotation = ({ params }) => {
     }
     if (emails.length == 0) {
       return toast.error("Please add email");
+    }
+    if(from.name.trim()==''||from.email.trim()==''||from.phone.trim()==''||from.address.trim()==''){
+      return toast.error("Please add from details");
     }
     const quotationData = {
       products: selectedProducts.map((p) => ({
@@ -232,9 +244,12 @@ const UpdateQuotation = ({ params }) => {
       subTotal,
       showPrice,
       emails,
+      from,
+      logo,
     };
 
     try {
+      setSubmited(true);
       const res = await editQuotation(quotationData, qid);
       if (res?.status === 200) {
         toast.success(res?.data?.message);
@@ -243,6 +258,8 @@ const UpdateQuotation = ({ params }) => {
     } catch (error) {
       toast.error(error.response?.data?.message);
       console.error(error.message);
+    }finally {
+      setSubmited(false);
     }
   };
 
@@ -418,6 +435,11 @@ const UpdateQuotation = ({ params }) => {
               setShowPrice={setShowPrice}
               emails={emails}
               setEmails={setEmails}
+              submited={submited}
+              from={from}
+              setFrom={setFrom}
+              logo={logo}
+              setLogo={setLogo}
             />
           </div>
         );

@@ -19,7 +19,7 @@ const Page = () => {
   const admin = state?.admin?.admin;
   const adminId = admin?._id;
 
-  const usersPerPage = 1;
+  const usersPerPage = 20;
 
   const fetchUsers = async (page = 1, limit = usersPerPage, searchQuery = "") => {
     setIsLoading(true);

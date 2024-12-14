@@ -29,7 +29,7 @@ const QuotationsTable = () => {
   const initialPage = parseInt(searchParams.get("page")) || 1;
   const [currentPage, setCurrentPage] = useState(initialPage);
 
-  const ITEMS_PER_PAGE = 5;
+  const ITEMS_PER_PAGE = 20;
 
   const debouncedSearchTerm = useDebounce(searchTerm, 600);
   const debouncedStartDate = useDebounce(startDate, 600);

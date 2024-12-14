@@ -17,16 +17,20 @@ const createAxiosInstance = (baseURL, loginAction, logoutAction, userType) => {
     baseURL,
     timeout: 30000,
     timeoutErrorMessage: 'Request timeout. Please try again.',
+    withCredentials: true, // Send cookies with every request
   });
 
   // Request interceptor to add token
-  instance.interceptors.request.use((config) => {
-    const token = Cookies.get('accessToken');
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
-    }
-    return config;
-  }, (error) => Promise.reject(error));
+  instance.interceptors.request.use(
+    (config) => {
+      const token = Cookies.get('accessToken'); // Only accessToken here
+      if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`;
+      }
+      return config;
+    },
+    (error) => Promise.reject(error)
+  );
 
   // Response interceptor to handle 401 Unauthorized (token expiration)
   instance.interceptors.response.use(
@@ -34,41 +38,41 @@ const createAxiosInstance = (baseURL, loginAction, logoutAction, userType) => {
     async (error) => {
       const originalRequest = error.config;
 
-      // If token expired (401 error) and it's not a retry, then refresh token
+      // If token expired (401 error) and it's not a retry
       if (error.response.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
 
-        const refreshToken = Cookies.get('refreshToken');
-        if (refreshToken) {
-          try {
-            // Call backend refresh token API to get new access and refresh tokens
-            const res = await axios.post(`${baseURL}auth/refresh-token`, { refreshToken });
-            const { accessToken, refreshToken: newRefreshToken } = res.data;
+        try {
+          // Call backend refresh token API (refreshToken is automatically sent via cookies)
+          const res = await axios.post(`${baseURL}auth/refresh-token`, {}, { withCredentials: true });
 
-            // Update cookies with new tokens
-            Cookies.set('accessToken', accessToken, { expires: 0.5 });
-            Cookies.set('refreshToken', newRefreshToken, { expires: 1 });
+          const { accessToken } = res.data; // Get new accessToken (refreshToken is stored in HttpOnly cookie)
 
-            // Fetch user/admin/hoster data after token refresh
-            const dataResponse = await axios.get(`${baseURL}${userType}/me`);  // Simulated endpoint to get current user data
-            const userData = dataResponse.data;
+          // Update accessToken in cookies
+          Cookies.set('accessToken', accessToken, { expires: 0.5 });
 
-            // Update Redux store with the user data
-            store.dispatch(loginAction({ token: accessToken, data: userData }));
+          // Fetch user/admin/hoster data after token refresh
+          const dataResponse = await axios.get(`${baseURL}${userType}/me`, {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          });
 
-            // Retry the original request with the new token
-            originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
-            return axios(originalRequest);
-          } catch (refreshError) {
-            // If refresh token fails, log out the user and redirect to login page
-            store.dispatch(logoutAction());
-            window.location.href = `/${userType}/login`; // Redirect to the respective login page
-          }
+          const userData = dataResponse.data;
+
+          // Update Redux store with the user data
+          store.dispatch(loginAction({ token: accessToken, data: userData }));
+
+          // Retry the original request with the new token
+          originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
+          return axios(originalRequest);
+        } catch (refreshError) {
+          // If refresh token fails, log out the user and redirect to login page
+          store.dispatch(logoutAction());
+          window.location.href = `/${userType}/login`;
         }
       } else if (error.response.status === 401) {
         // If there's no valid token, redirect to login page
         store.dispatch(logoutAction());
-        window.location.href = `/${userType}/login`; // Redirect to the respective login page
+        window.location.href = `/${userType}/login`;
       }
 
       return Promise.reject(error);
@@ -77,6 +81,7 @@ const createAxiosInstance = (baseURL, loginAction, logoutAction, userType) => {
 
   return instance;
 };
+
 
 // Create instances for user, admin, and hoster
 export const userAxiosInstance = createAxiosInstance(userBaseURL, userLogin, userLogout, 'user');

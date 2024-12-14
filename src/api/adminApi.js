@@ -205,7 +205,11 @@ export const updateAdminPassword = async(adminId,password)=>{
 }
 
 export const updateAdminLogo = async(adminId,file)=>{
-  console.log(adminId,file,"callooooo")
   const data = await adminAxiosInstance.post('/updateLogo',{adminId,file});
+  return data
+}
+
+export const quotationDetails = async(qid)=>{
+  const data = await adminAxiosInstance.get(`quotationDetails/${qid}`);
   return data
 }

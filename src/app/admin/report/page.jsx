@@ -190,7 +190,7 @@ const ReportsDashboard = () => {
                 <DollarSign className="text-blue-500" />
               </div>
               <p className="text-3xl font-semibold text-blue-600">
-                ${reportData.totalRevenue.toLocaleString()}
+                {reportData.totalRevenue.toLocaleString()}
               </p>
             </div>
 
@@ -305,7 +305,7 @@ const ReportsDashboard = () => {
                       },
                       ticks: {
                         color: 'rgba(0,0,0,0.6)',
-                        callback: (value) => `$${value}`
+                        callback: (value) => `${value}`
                       }
                     },
                     x: {
@@ -329,7 +329,7 @@ const ReportsDashboard = () => {
                     <span className="text-gray-700">{client.name}</span>
                     <div className="text-right">
                       <div className="text-sm text-blue-600 font-semibold">
-                        ${client.totalRevenue.toLocaleString()}
+                        {client.totalRevenue.toLocaleString()}
                       </div>
                       <div className="text-xs text-gray-500">
                         {client.quotationCount} Quotations

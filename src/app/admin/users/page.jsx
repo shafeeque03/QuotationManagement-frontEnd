@@ -23,7 +23,7 @@ const Page = () => {
   const state = useSelector((state) => state);
   const admin = state?.admin?.admin;
   const admin_id = admin?._id
-  const usersPerPage = 1;
+  const usersPerPage = 15;
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);

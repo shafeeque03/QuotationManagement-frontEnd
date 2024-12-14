@@ -19,7 +19,7 @@ const Page = () => {
   const state = useSelector((state) => state);
   const admin = state?.admin?.admin;
   const adminId = admin?._id;
-  const productsPerPage = 2;
+  const productsPerPage = 20;
 
 
   const fetchProducts = async (

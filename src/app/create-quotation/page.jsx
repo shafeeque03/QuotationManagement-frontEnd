@@ -49,13 +49,22 @@ const CreateQuotation = () => {
     address: "",
     phone: "",
   });
-  const [tax,setTax] = useState(0);
-  const [taxName,setTaxName] = useState("")
-  const [subTotal,setSubtotal] = useState(0)
+  const [from, setFrom] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+  });
+
+  const [logo, setLogo] = useState(null);
+
+  const [tax, setTax] = useState(0);
+  const [taxName, setTaxName] = useState("");
+  const [subTotal, setSubtotal] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
-  const [showPrice, setShowPrice] = useState(true)
+  const [showPrice, setShowPrice] = useState(true);
   const debouncedSearchTerm = useDebounce(searchQuery, 600);
-  const [emails,setEmails] = useState([])
+  const [emails, setEmails] = useState([]);
 
   const today = new Date().toISOString().split("T")[0];
 
@@ -83,7 +92,7 @@ const CreateQuotation = () => {
   const [ProQuantity, setProQuantity] = useState(1);
   const [ProDescription, setProDescription] = useState("");
   const [ProPrice, setProPrice] = useState(0);
-  const [submited,setSubmited] = useState(false)
+  const [submited, setSubmited] = useState(false);
 
   // Service Form State
   const [serviceName, setServiceName] = useState("");
@@ -92,8 +101,7 @@ const CreateQuotation = () => {
 
   const [termsAndConditions, setTermsAndConditions] = useState("");
   const [description, setDescription] = useState("");
-  const [title, setTitle] = useState("")
-
+  const [title, setTitle] = useState("");
 
   // Add New Product
   const handleAddProduct = () => {
@@ -153,8 +161,8 @@ const CreateQuotation = () => {
       0
     );
     setTotalAmount(productTotal + serviceTotal);
-    setSubtotal(totalAmount+(tax/100)* totalAmount)
-  }, [selectedProducts, selectedServices,totalAmount,tax]);
+    setSubtotal(totalAmount + (tax / 100) * totalAmount);
+  }, [selectedProducts, selectedServices, totalAmount, tax]);
 
   const handleAddClient = async () => {
     // Check for blank name or email
@@ -167,7 +175,7 @@ const CreateQuotation = () => {
       const res = await addClient(newClient, adminId);
       setClients((prev) => [...prev, res.data.client]);
       setClientId(res.data.client._id);
-      setClientIs(res.data.client)
+      setClientIs(res.data.client);
       setModalOpen(false);
       toast.success("Client added successfully!");
 
@@ -217,13 +225,15 @@ const CreateQuotation = () => {
   };
 
   const handleSubmit = async (e) => {
-    setSubmited(true)
     e.preventDefault();
     if (selectedProducts.length == 0 && selectedServices.length == 0) {
       return toast.error("Select Product or Service");
     }
-    if(emails.length==0){
+    if (emails.length == 0) {
       return toast.error("Please add email");
+    }
+    if(from.name.trim()==''||from.email.trim()==''||from.phone.trim()==''||from.address.trim()==''){
+      return toast.error("Please add from details");
     }
     const quotationData = {
       products: selectedProducts.map((p) => ({
@@ -249,10 +259,13 @@ const CreateQuotation = () => {
       taxName,
       subTotal,
       showPrice,
-      emails
+      emails,
+      from,
+      logo,
     };
 
     try {
+    setSubmited(true);
       const res = await addQuotation(quotationData, adminId);
       if (res?.status === 200) {
         toast.success(res?.data?.message);
@@ -262,7 +275,7 @@ const CreateQuotation = () => {
       toast.error(error.response?.data?.message);
       console.error(error.message);
     } finally {
-      setSubmited(false)
+      setSubmited(false);
     }
   };
 
@@ -352,8 +365,8 @@ const CreateQuotation = () => {
         return (
           <div className="space-y-6">
             <h2 className="text-xl font-semibold mb-4 flex items-center">
-                  For PDF purpose
-                </h2>
+              For PDF purpose
+            </h2>
             {/* Terms and Conditions Section */}
             <div className="mt-4">
               <label
@@ -455,6 +468,10 @@ const CreateQuotation = () => {
               emails={emails}
               setEmails={setEmails}
               submited={submited}
+              from={from}
+              setFrom={setFrom}
+              logo={logo}
+              setLogo={setLogo}
             />
           </div>
         );

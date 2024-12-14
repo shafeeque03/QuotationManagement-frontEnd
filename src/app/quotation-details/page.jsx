@@ -7,7 +7,6 @@ import toast from "react-hot-toast";
 import QuotationFiles from "@/components/userComponents/QuotationFiles";
 import Link from "next/link";
 
-
 const Page = () => {
   const [quotation, setQuotation] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -15,7 +14,6 @@ const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-
 
   const params = useSearchParams();
   const qid = params.get("qid");
@@ -104,21 +102,20 @@ const Page = () => {
             Quotation Details
           </h2>
           <div className="flex flex-wrap gap-3">
-            
             <div
               onClick={() => window.open(quotation.proposal, "_blank")}
               className="cursor-pointer bg-blue-500/10 text-blue-600 border border-blue-500/30 mt-6 px-6 py-3 rounded-full hover:shadow-lg hover:scale-105 transition"
             >
               View Proposal
             </div>
-            {quotation.status=='pending' &&
-            <div
-              onClick={() =>handleViewQuotation(quotation._id) }
-              className="cursor-pointer bg-orange-500/10 text-orange-600 border border-orange-500/30 mt-6 px-6 py-3 rounded-full hover:shadow-lg hover:scale-105 transition"
-            >
-              Update Quotation
-            </div>
-            }
+            {quotation.status == "pending" && (
+              <div
+                onClick={() => handleViewQuotation(quotation._id)}
+                className="cursor-pointer bg-orange-500/10 text-orange-600 border border-orange-500/30 mt-6 px-6 py-3 rounded-full hover:shadow-lg hover:scale-105 transition"
+              >
+                Update Quotation
+              </div>
+            )}
           </div>
         </div>
 
@@ -140,17 +137,19 @@ const Page = () => {
               </p>
               <p className="text-gray-700">
                 <span className="font-medium text-gray-900">Total Amount:</span>{" "}
-                {quotation.totalAmount?.toLocaleString()||'NA'}
+                {quotation.totalAmount?.toLocaleString() || "NA"}
               </p>
               <p className="text-gray-700">
-                <span className="font-medium text-gray-900">{quotation.taxName}:</span>{" "}
-                {quotation.tax?.toLocaleString()||'NA'}%
+                <span className="font-medium text-gray-900">
+                  {quotation.taxName}:
+                </span>{" "}
+                {quotation.tax?.toLocaleString() || "NA"}%
               </p>
               <p className="text-gray-700 font-semibold">
                 <span className="font-medium text-gray-900 ">SubTotal:</span>{" "}
-                {quotation.subTotal?.toLocaleString()||'NA'}
+                {quotation.subTotal?.toLocaleString() || "NA"}
               </p>
-              
+
               {quotation.status === "rejected" && (
                 <p className="text-gray-700">
                   <span className="font-medium text-gray-900">
@@ -160,17 +159,16 @@ const Page = () => {
                 </p>
               )}
               <div
-              className={`${
-                quotation.status === "rejected"
-                  ? "bg-red-500/10 text-red-600 border border-red-500/30"
-                  : quotation.status === "accepted"
-                  ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/30"
-                  : "bg-amber-500/10 text-amber-600 border border-amber-500/30"
-              } mt-6 px-6 py-3 rounded-full hover:shadow-lg hover:scale-105 transition text-center`}
-            >
-              {quotation.status.toUpperCase()}
-            </div>
-              
+                className={`${
+                  quotation.status === "rejected"
+                    ? "bg-red-500/10 text-red-600 border border-red-500/30"
+                    : quotation.status === "accepted"
+                    ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/30"
+                    : "bg-amber-500/10 text-amber-600 border border-amber-500/30"
+                } mt-6 px-6 py-3 rounded-full hover:shadow-lg hover:scale-105 transition text-center`}
+              >
+                {quotation.status.toUpperCase()}
+              </div>
             </div>
           </div>
 
@@ -180,34 +178,60 @@ const Page = () => {
               Client Information
             </h3>
             <div className="space-y-3">
-              <p className="text-gray-700">
-                <span className="font-medium text-gray-900">Name:</span>{" "}
-                {quotation.client.name}
-              </p>
-              <p className="text-gray-700">
-                <span className="font-medium text-gray-900">Email:</span>{" "}
-                {quotation.client.email}
-              </p>
-              <p className="text-gray-700">
-                <span className="font-medium text-gray-900">Phone:</span>{" "}
-                {quotation.client.phone}
-              </p>
-              <p className="text-gray-700">
-                <span className="font-medium text-gray-900">Address:</span>{" "}
-                {quotation.client.address}
-              </p>
+              <div>
+                <h4 className="text-lg font-semibold text-gray-700 mb-2">
+                  Client Details
+                </h4>
+                <p className="text-gray-700">
+                  <span className="font-medium text-gray-900">Name:</span>{" "}
+                  {quotation.client.name}
+                </p>
+                <p className="text-gray-700">
+                  <span className="font-medium text-gray-900">Email:</span>{" "}
+                  {quotation.client.email}
+                </p>
+                <p className="text-gray-700">
+                  <span className="font-medium text-gray-900">Phone:</span>{" "}
+                  {quotation.client.phone}
+                </p>
+                <p className="text-gray-700">
+                  <span className="font-medium text-gray-900">Address:</span>{" "}
+                  {quotation.client.address}
+                </p>
+              </div>
+
+              <div className="border-t border-gray-200 pt-4">
+                <h4 className="text-lg font-semibold text-gray-700 mb-2">
+                  Quotation From
+                </h4>
+                <p className="text-gray-700">
+                  <span className="font-medium text-gray-900">Name:</span>{" "}
+                  {quotation.from.name}
+                </p>
+                <p className="text-gray-700">
+                  <span className="font-medium text-gray-900">Email:</span>{" "}
+                  {quotation.from.email}
+                </p>
+                <p className="text-gray-700">
+                  <span className="font-medium text-gray-900">Phone:</span>{" "}
+                  {quotation.from.phone}
+                </p>
+                <p className="text-gray-700">
+                  <span className="font-medium text-gray-900">Address:</span>{" "}
+                  {quotation.from.address}
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
-
-          {/* Products Card */}
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 my-4">
-            <h3 className="text-xl font-semibold text-gray-800 border-b border-gray-100 pb-2 mb-4">
-              Products
-            </h3>
-            {quotation.products.length > 0 ? (
-              <div className="mb-6">
+        {/* Products Card */}
+        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 my-4">
+          <h3 className="text-xl font-semibold text-gray-800 border-b border-gray-100 pb-2 mb-4">
+            Products
+          </h3>
+          {quotation.products.length > 0 ? (
+            <div className="mb-6">
               <div className="overflow-x-auto">
                 <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
                   <thead className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
@@ -248,20 +272,20 @@ const Page = () => {
                 </table>
               </div>
             </div>
-            ) : (
-              <p className="text-gray-500">
-                No products added to this quotation.
-              </p>
-            )}
-          </div>
+          ) : (
+            <p className="text-gray-500">
+              No products added to this quotation.
+            </p>
+          )}
+        </div>
 
-          {/* Services Card */}
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-            <h3 className="text-xl font-semibold text-gray-800 border-b border-gray-100 pb-2 mb-4">
-              Services
-            </h3>
-            {quotation.services.length > 0 ? (
-              <div className="mb-6">
+        {/* Services Card */}
+        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+          <h3 className="text-xl font-semibold text-gray-800 border-b border-gray-100 pb-2 mb-4">
+            Services
+          </h3>
+          {quotation.services.length > 0 ? (
+            <div className="mb-6">
               <h3 className="text-lg font-semibold mb-4">Selected Services</h3>
               <div className="overflow-x-auto">
                 <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
@@ -295,14 +319,14 @@ const Page = () => {
                 </table>
               </div>
             </div>
-            ) : (
-              <p className="text-gray-500">
-                No services added to this quotation.
-              </p>
-            )}
-          </div>
+          ) : (
+            <p className="text-gray-500">
+              No services added to this quotation.
+            </p>
+          )}
+        </div>
         {/* Files Card */}
-        {quotation.fileUrl && quotation.fileUrl.length>0 && (
+        {quotation.fileUrl && quotation.fileUrl.length > 0 && (
           <QuotationFiles files={quotation.fileUrl} />
         )}
 
@@ -359,19 +383,19 @@ const Page = () => {
           </div>
         )}
 
-{showPDF && (
-        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-          <div className="bg-white p-4 rounded-lg shadow-lg max-w-4xl w-full h-[90vh]">
-            <button
-              onClick={() => setShowPDF(false)}
-              className="text-red-500 hover:text-red-700 absolute top-4 right-4 font-bold"
-            >
-              Close
-            </button>
-            <PDFViewer url={quotation.proposal} />
+        {showPDF && (
+          <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+            <div className="bg-white p-4 rounded-lg shadow-lg max-w-4xl w-full h-[90vh]">
+              <button
+                onClick={() => setShowPDF(false)}
+                className="text-red-500 hover:text-red-700 absolute top-4 right-4 font-bold"
+              >
+                Close
+              </button>
+              <PDFViewer url={quotation.proposal} />
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
         {/* Confirmation Modal */}
         {isConfirmModalOpen && (

@@ -20,7 +20,7 @@ const Page = () => {
   const admin = state?.admin?.admin;
   const adminId = admin?._id;
 
-  const servicesPerPage = 5;
+  const servicesPerPage = 20;
 
   const fetchServices = async (
     page = 1,
