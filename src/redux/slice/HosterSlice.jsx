@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
+import Cookies from "js-cookie";
 
 const initialState = {
   token: null,
-  hoster: null,
+  hoster: null, // Store hoster data here
 };
 
 const hosterSlice = createSlice({
@@ -11,11 +12,12 @@ const hosterSlice = createSlice({
   reducers: {
     hosterLogin: (state, action) => {
       state.token = action.payload.token;
-      state.hoster = action.payload.hoster;
+      state.hoster = action.payload.hoster; // Storing hoster data in Redux
     },
     hosterLogout: (state) => {
       state.token = null;
-      state.hoster = null;
+      state.hoster = null; // Clearing hoster data on logout
+      Cookies.remove('hosterToken');
     },
   },
 });

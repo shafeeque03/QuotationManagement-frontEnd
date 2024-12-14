@@ -20,7 +20,8 @@ const FinalSection = ({
   showPrice,
   setShowPrice,
   emails,
-  setEmails
+  setEmails,
+  submited
 }) => {
   const [newEmail, setNewEmail] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -339,11 +340,11 @@ const FinalSection = ({
         </button>
         <button
           type="submit"
-          disabled={!expireDate}
+          disabled={!expireDate||submited}
           className="px-6 py-3 bg-green-500 text-white rounded-lg 
           disabled:opacity-50 hover:bg-green-600 transition flex items-center"
         >
-          Create Quotation
+          {submited?'Creating..':'Submit'}
           <CheckIcon className="ml-2 w-5 h-5" />
         </button>
       </div>

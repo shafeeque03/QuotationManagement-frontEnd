@@ -19,26 +19,27 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      let res = await userLoginApi(loginId, password);
+      const res = await userLoginApi(loginId, password); // API request to login
+      console.log(res.data,"juuuoo")
+  
       if (res.status === 200) {
         toast.success(res?.data?.message);
   
-        // Store token in cookies
-        Cookies.set('userToken', res?.data?.token, {
+        // Store token in cookies (ensure secure flag is set for production)
+        Cookies.set('userToken', res?.data?.accessToken, {
           expires: 0.5, // 12 hours
-          secure: true, // Use secure cookies in production
+          secure: process.env.NODE_ENV === 'production', // Only set secure cookies in production
           sameSite: 'strict', // Protect against CSRF
         });
-        
   
-        // Dispatch user login details
-        dispatch(userLogin({ token: res?.data?.token, user: res?.data?.user }));
+        // Dispatch user login details to Redux store
+        dispatch(userLogin({ token: res?.data?.accessToken, user: res?.data?.user }));
   
-        // Redirect user to home
+        // Redirect user to home page
         router.push('/');
       }
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
       toast.error(error.response?.data?.message || 'ID or Password incorrect');
     }
   };

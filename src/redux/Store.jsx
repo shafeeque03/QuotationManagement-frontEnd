@@ -1,37 +1,53 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { combineReducers } from '@reduxjs/toolkit';
-import cookies from 'js-cookie';
 import userReducer from './slice/UserSlice';
-import adminReducer from './slice/AdminSlice'
-import hosterReducer from './slice/HosterSlice'
+import adminReducer from './slice/AdminSlice';
+import hosterReducer from './slice/HosterSlice';
 
+// Combine reducers
 const reducer = combineReducers({
   user: userReducer,
   admin: adminReducer,
-  hoster: hosterReducer
+  hoster: hosterReducer,
 });
 
-const loadStateFromCookies = () => {
-  const savedState = cookies.get('reduxState');
-  return savedState ? JSON.parse(savedState) : undefined;
+// Load state from localStorage
+const loadStateFromLocalStorage = () => {
+  try {
+    const serializedState = localStorage.getItem('reduxState');
+    return serializedState ? JSON.parse(serializedState) : undefined;
+  } catch (e) {
+    console.warn('Failed to load state from localStorage:', e);
+    return undefined;
+  }
 };
 
-const preloadedState = loadStateFromCookies();
+// Save state to localStorage
+const saveStateToLocalStorage = (state) => {
+  try {
+    const serializedState = JSON.stringify(state);
+    localStorage.setItem('reduxState', serializedState);
+  } catch (e) {
+    console.warn('Failed to save state to localStorage:', e);
+  }
+};
 
+// Load persisted state
+const preloadedState = loadStateFromLocalStorage();
+
+// Create store
 const store = configureStore({
   reducer,
-  preloadedState,
+  preloadedState, // Load initial state from localStorage
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE', 'persist/REGISTER'],
-      },
+      serializableCheck: false, // Disable serializable check
     }),
 });
 
+// Save state to localStorage whenever it changes
 store.subscribe(() => {
-  const state = store.getState();
-  cookies.set('reduxState', JSON.stringify(state), { expires: 0.5 });
+  saveStateToLocalStorage(store.getState());
 });
 
 export default store;

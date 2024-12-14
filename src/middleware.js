@@ -8,41 +8,45 @@ export function middleware(req) {
 
   const requestedPath = req.nextUrl.pathname;
 
-  // Helper function to check token validity
   const isTokenExpired = (token) => {
     try {
       const decoded = jwt.decode(token);
-      return decoded?.exp * 1000 < Date.now(); // Compare expiration with current time
+      return decoded?.exp * 1000 < Date.now();
     } catch (error) {
-      return true; // Treat invalid tokens as expired
+      return true;
     }
   };
 
   // User Protect
   if (
-    ['/','/quotations','/quotation-details','/create-quotation']
-    .includes(requestedPath) &&
-    (!userToken || isTokenExpired(userToken))
+    ['/', '/quotations', '/quotation-details', '/create-quotation'].includes(requestedPath)
   ) {
-    return NextResponse.redirect(new URL('/login', req.url));
+    if (!userToken || isTokenExpired(userToken)) {
+      req.cookies.delete('userToken');
+      return NextResponse.redirect(new URL('/login', req.url));
+    }
   }
 
   // Admin Protect
   if (
     requestedPath.startsWith('/admin') &&
-    !requestedPath.includes('/admin/login') &&
-    (!adminToken || isTokenExpired(adminToken))
+    !requestedPath.includes('/admin/login')
   ) {
-    return NextResponse.redirect(new URL('/admin/login', req.url));
+    if (!adminToken || isTokenExpired(adminToken)) {
+      req.cookies.delete('adminToken');
+      return NextResponse.redirect(new URL('/admin/login', req.url));
+    }
   }
 
-  // Developer Protect
+  // Hoster Protect
   if (
     requestedPath.startsWith('/hoster') &&
-    !requestedPath.includes('/hoster/login') &&
-    (!hosterToken || isTokenExpired(hosterToken))
+    !requestedPath.includes('/hoster/login')
   ) {
-    return NextResponse.redirect(new URL('/hoster/login', req.url));
+    if (!hosterToken || isTokenExpired(hosterToken)) {
+      req.cookies.delete('hosterToken');
+      return NextResponse.redirect(new URL('/hoster/login', req.url));
+    }
   }
 
   return NextResponse.next();

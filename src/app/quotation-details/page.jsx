@@ -6,7 +6,6 @@ import { quotationDetails, quotationStatusChange } from "../../api/userApi";
 import toast from "react-hot-toast";
 import QuotationFiles from "@/components/userComponents/QuotationFiles";
 import Link from "next/link";
-import { PDFViewer } from "@/components/commonComponents/PDFViewer";
 
 
 const Page = () => {
@@ -112,12 +111,14 @@ const Page = () => {
             >
               View Proposal
             </div>
+            {quotation.status=='pending' &&
             <div
               onClick={() =>handleViewQuotation(quotation._id) }
               className="cursor-pointer bg-orange-500/10 text-orange-600 border border-orange-500/30 mt-6 px-6 py-3 rounded-full hover:shadow-lg hover:scale-105 transition"
             >
               Update Quotation
             </div>
+            }
           </div>
         </div>
 

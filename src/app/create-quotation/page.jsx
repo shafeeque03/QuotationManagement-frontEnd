@@ -83,6 +83,7 @@ const CreateQuotation = () => {
   const [ProQuantity, setProQuantity] = useState(1);
   const [ProDescription, setProDescription] = useState("");
   const [ProPrice, setProPrice] = useState(0);
+  const [submited,setSubmited] = useState(false)
 
   // Service Form State
   const [serviceName, setServiceName] = useState("");
@@ -216,6 +217,7 @@ const CreateQuotation = () => {
   };
 
   const handleSubmit = async (e) => {
+    setSubmited(true)
     e.preventDefault();
     if (selectedProducts.length == 0 && selectedServices.length == 0) {
       return toast.error("Select Product or Service");
@@ -259,6 +261,8 @@ const CreateQuotation = () => {
     } catch (error) {
       toast.error(error.response?.data?.message);
       console.error(error.message);
+    } finally {
+      setSubmited(false)
     }
   };
 
@@ -450,6 +454,7 @@ const CreateQuotation = () => {
               setShowPrice={setShowPrice}
               emails={emails}
               setEmails={setEmails}
+              submited={submited}
             />
           </div>
         );

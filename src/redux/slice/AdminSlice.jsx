@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
+import Cookies from "js-cookie";
 
 const initialState = {
   token: null,
-  admin: null,
+  admin: null, // Store admin data here
 };
 
 const adminSlice = createSlice({
@@ -11,11 +12,12 @@ const adminSlice = createSlice({
   reducers: {
     adminLogin: (state, action) => {
       state.token = action.payload.token;
-      state.admin = action.payload.admin;
+      state.admin = action.payload.admin; // Storing admin data in Redux
     },
     adminLogout: (state) => {
       state.token = null;
-      state.admin = null;
+      state.admin = null; // Clearing admin data on logout
+      Cookies.remove('adminToken');
     },
   },
 });
