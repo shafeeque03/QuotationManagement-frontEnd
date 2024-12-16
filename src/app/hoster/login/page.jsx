@@ -25,7 +25,7 @@ const Page = () => {
   
         // Store token in cookies
         Cookies.set('hosterToken', res?.data?.token, {
-          expires: 1, // 1 day
+          expires: 0.5, // 12h
           secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
           sameSite: 'strict', // Protect against CSRF
         });

@@ -1,13 +1,13 @@
 "use client";
 import React, { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import QuotationDetailsContent from "@/components/userComponents/QuotationDetailsContent";
-const QuotationDetailsPage = () => {
+import OtpVerificationContext from "@/components/adminComponents/OtpVerificationContext";
+const QuotationsPage = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <QuotationDetailsContent />
+      <OtpVerificationContext />
     </Suspense>
   );
 };
 
-export default QuotationDetailsPage;
+export default QuotationsPage;

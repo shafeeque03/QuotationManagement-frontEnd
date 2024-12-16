@@ -269,7 +269,7 @@ const CreateQuotation = () => {
       const res = await addQuotation(quotationData, adminId);
       if (res?.status === 200) {
         toast.success(res?.data?.message);
-        // router.push("/");
+        router.push("/");
       }
     } catch (error) {
       toast.error(error.response?.data?.message);

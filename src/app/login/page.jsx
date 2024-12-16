@@ -20,7 +20,6 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       const res = await userLoginApi(loginId, password); // API request to login
-      console.log(res.data,"juuuoo")
   
       if (res.status === 200) {
         toast.success(res?.data?.message);
@@ -39,7 +38,7 @@ const LoginPage = () => {
         router.push('/');
       }
     } catch (error) {
-      console.error(error.message);
+      console.log(error.message);
       toast.error(error.response?.data?.message || 'ID or Password incorrect');
     }
   };

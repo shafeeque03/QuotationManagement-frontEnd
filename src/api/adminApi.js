@@ -213,3 +213,28 @@ export const quotationDetails = async(qid)=>{
   const data = await adminAxiosInstance.get(`quotationDetails/${qid}`);
   return data
 }
+
+export const createAdmin = async(formData)=>{
+  const data = await adminAxiosInstance.post('/createAdmin',{formData});
+  return data
+}
+
+export const verifyOtp = async(adminId,otp)=>{
+  const data = await adminAxiosInstance.post('/verifyOtp',{adminId,otp});
+  return data
+}
+
+export const resendOtp = async(adminId)=>{
+  const data = await adminAxiosInstance.post('/resendOtp',{adminId});
+  return data
+}
+
+export const forgetPassword = async(email)=>{
+  const data = await adminAxiosInstance.post('/forgetPassword',{email});
+  return data
+}
+
+export const changeAdminPassword = async(adminId,password)=>{
+  const data = await adminAxiosInstance.post('/changePassword',{adminId,password});
+  return data
+}

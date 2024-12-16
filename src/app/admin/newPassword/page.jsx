@@ -1,13 +1,14 @@
 "use client";
 import React, { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import QuotationDetailsContent from "@/components/userComponents/QuotationDetailsContent";
-const QuotationDetailsPage = () => {
+import NewPasswordContext from "@/components/adminComponents/NewPassContext";
+
+const QuotationsPage = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <QuotationDetailsContent />
+      <NewPasswordContext />
     </Suspense>
   );
 };
 
-export default QuotationDetailsPage;
+export default QuotationsPage;
