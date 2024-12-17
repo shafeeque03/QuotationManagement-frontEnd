@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   updateAdminProfile,
   updateAdminPassword,
-  updateAdminLogo,
 } from "@/api/adminApi";
 import Sidebar from "@/components/adminComponents/Sidebar";
 import {
@@ -19,20 +18,16 @@ import {
   EyeIcon,
   ShieldAlert,
   AlertCircle,
-  ImagePlus,
-  Trash2,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { adminLogin } from "@/redux/slice/AdminSlice";
 import ProfileDetailsSec from "@/components/adminComponents/ProfileDetailsSec";
 import PasswordUpdateSec from "@/components/adminComponents/PasswordUpdateSec";
-import ProfileImageSec from "@/components/adminComponents/ProfileImageSec";
 
 const AdminProfilePage = () => {
   const state = useSelector((state) => state);
   const admin = state?.admin?.admin || {};
   const adminId = admin?._id;
-  const [buttonName,setButtonName] = useState('Upload Logo')
 
   const [isHydrated, setIsHydrated] = useState(false);
 
@@ -41,10 +36,6 @@ const AdminProfilePage = () => {
     setIsHydrated(true);
   }, []);
 
-  // Logo state
-  const [logoFile, setLogoFile] = useState(null);
-  const adminLogo = admin.logo || null;
-  const [previewLogo, setPreviewLogo] = useState(adminLogo || null);
   // Profile form state
   const [profileForm, setProfileForm] = useState({
     name: admin.name || "",
@@ -58,68 +49,6 @@ const AdminProfilePage = () => {
   });
 
   const dispatch = useDispatch();
-
-  const handleLogoFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Validate file type and size
-      const allowedTypes = ["image/jpeg", "image/png", "image/svg+xml"];
-      const maxSize = 5 * 1024 * 1024; // 5MB
-
-      if (!allowedTypes.includes(file.type)) {
-        toast.error("Invalid file type. Please upload JPEG, PNG, or SVG.");
-        return;
-      }
-
-      if (file.size > maxSize) {
-        toast.error("File size should be less than 5MB.");
-        return;
-      }
-
-      // Create preview and set file
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        setPreviewLogo(reader.result);
-        setLogoFile({ name: file.name, base64: reader.result });
-      };
-    }
-  };
-
-  const handleLogoUpload = async () => {
-    if (!logoFile) {
-      toast.error("Please select a logo first");
-      return;
-    }
-
-    try {
-      setButtonName('Uploading..')
-      const res = await updateAdminLogo(adminId, logoFile);
-      dispatch(adminLogin({ admin: res?.data?.newAdmin }));
-      toast.success("Logo updated successfully!");
-
-      // Optionally update the logo URL in state if the API returns it
-      if (res?.data?.newAdmin) {
-        setPreviewLogo(res?.data?.newAdmin?.logo);
-      }
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Logo upload failed");
-    } finally{
-      setButtonName('Upload Logo')
-    }
-  };
-
-  // Remove logo
-  const handleRemoveLogo = async () => {
-    try {
-      await updateAdminLogo(adminId, null);
-      setPreviewLogo(null);
-      setLogoFile(null);
-      toast.success("Logo removed successfully!");
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Logo removal failed");
-    }
-  };
 
   // Password form state
   const [passwordForm, setPasswordForm] = useState({
@@ -249,60 +178,36 @@ const AdminProfilePage = () => {
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
       <Sidebar />
       <div className="flex-1 p-8 space-y-8">
-        {!adminLogo ? (
-          <div className="flex items-center justify-center min-h-screen">
-            <p className="text-xl text-gray-300">Loading user information...</p>
-          </div>
-        ) : (
-          <>
-          <ProfileDetailsSec
-                User={User}
-                profileForm={profileForm}
-                handleProfileChange={handleProfileChange}
-                profileValidation={profileValidation}
-                handleProfileUpdate={handleProfileUpdate}
-                AlertCircle={AlertCircle}
-                Mail={Mail}
-                Phone={Phone}
-                MapPin={MapPin}
-                Save={Save}
-              />
-            {/* Logo Upload Section */}
-            <div className="grid md:grid-cols-2 gap-8">
-              {/* Profile Information */}
-            <ProfileImageSec
-              ImagePlus={ImagePlus}
-              previewLogo={previewLogo}
-              handleLogoFileChange={handleLogoFileChange}
-              handleRemoveLogo={handleRemoveLogo}
-              Trash2={Trash2}
-              logoFile={logoFile}
-              handleLogoUpload={handleLogoUpload}
-              Save={Save}
-              buttonName={buttonName}
-            />
-              
-
-              {/* Password Change Section */}
-              <PasswordUpdateSec
-                Lock={Lock}
-                showPasswordSection={showPasswordSection}
-                ShieldAlert={ShieldAlert}
-                setShowPasswordSection={setShowPasswordSection}
-                handlePasswordUpdate={handlePasswordUpdate}
-                showPassword={showPassword}
-                passwordForm={passwordForm}
-                handlePasswordChange={handlePasswordChange}
-                passwordValidation={passwordValidation}
-                AlertCircle={AlertCircle}
-                setShowPassword={setShowPassword}
-                EyeOff={EyeOff}
-                EyeIcon={EyeIcon}
-                Edit={Edit}
-              />
-            </div>
-          </>
-        )}
+        <ProfileDetailsSec
+          User={User}
+          profileForm={profileForm}
+          handleProfileChange={handleProfileChange}
+          profileValidation={profileValidation}
+          handleProfileUpdate={handleProfileUpdate}
+          AlertCircle={AlertCircle}
+          Mail={Mail}
+          Phone={Phone}
+          MapPin={MapPin}
+          Save={Save}
+        />
+        <div className="grid md:grid-cols-2 gap-8">
+          <PasswordUpdateSec
+            Lock={Lock}
+            showPasswordSection={showPasswordSection}
+            ShieldAlert={ShieldAlert}
+            setShowPasswordSection={setShowPasswordSection}
+            handlePasswordUpdate={handlePasswordUpdate}
+            showPassword={showPassword}
+            passwordForm={passwordForm}
+            handlePasswordChange={handlePasswordChange}
+            passwordValidation={passwordValidation}
+            AlertCircle={AlertCircle}
+            setShowPassword={setShowPassword}
+            EyeOff={EyeOff}
+            EyeIcon={EyeIcon}
+            Edit={Edit}
+          />
+        </div>
       </div>
     </div>
   );

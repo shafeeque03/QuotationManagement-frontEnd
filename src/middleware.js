@@ -55,7 +55,7 @@ export function middleware(req) {
 
   // Prevent logged-in admins from accessing the admin login page
   if (requestedPath === "/admin/login" && adminToken && !isTokenExpired(adminToken)) {
-    return NextResponse.redirect(new URL("/admin/dashboard", req.url)); // Redirect to admin dashboard
+    return NextResponse.redirect(new URL("/admin", req.url)); // Redirect to admin dashboard
   }
 
   // Hoster Protect: Protect hoster routes
@@ -71,7 +71,7 @@ export function middleware(req) {
 
   // Prevent logged-in hosters from accessing the hoster login page
   if (requestedPath === "/hoster/login" && hosterToken && !isTokenExpired(hosterToken)) {
-    return NextResponse.redirect(new URL("/hoster/dashboard", req.url)); // Redirect to hoster dashboard
+    return NextResponse.redirect(new URL("/hoster", req.url)); // Redirect to hoster dashboard
   }
 
   return NextResponse.next();

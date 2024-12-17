@@ -471,6 +471,7 @@ const UpdateQuotation = ({ params }) => {
     <div className="min-h-screen bg-gray-50">
       <UserMenu />
       <div className="container mx-auto px-4 py-12">
+            <h1 className="text-center font-bold text-2xl mb-4">Edit Quotation</h1>
         <form onSubmit={handleSubmit} className="max-w-5xl mx-auto">
           <div className="bg-white shadow-2xl rounded-xl p-12">
             {/* Progress Indicator */}
