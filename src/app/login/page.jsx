@@ -39,7 +39,7 @@ const LoginPage = () => {
       }
     } catch (error) {
       console.log(error.message);
-      toast.error(error.response?.data?.message || 'ID or Password incorrect');
+      toast.error(error.response?.data?.message || 'An error occured');
     }
   };
 
@@ -47,7 +47,7 @@ const LoginPage = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg flex flex-col md:flex-row w-full max-w-3xl">
         <div className="md:w-1/2 p-4">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Login to Employee Account</h2>
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Login to User Account</h2>
           
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
@@ -76,7 +76,7 @@ const LoginPage = () => {
 
             <button
               type="submit"
-              className="w-full bg-slate-700 text-white py-2 rounded-md hover:bg-gray-800 transition-colors"
+              className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-gray-800 transition-colors"
             >
               Sign In
             </button>
