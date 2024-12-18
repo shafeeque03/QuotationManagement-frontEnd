@@ -67,12 +67,12 @@ const createAxiosInstance = (baseURL, loginAction, logoutAction, userType) => {
         } catch (refreshError) {
           // If refresh token fails, log out the user and redirect to login page
           store.dispatch(logoutAction());
-          window.location.href = `/${userType}/login`;
+          window.location.href = `${userType=='user'?'':userType}/login`;
         }
       } else if (error.response.status === 401) {
         // If there's no valid token, redirect to login page
         store.dispatch(logoutAction());
-        window.location.href = `/${userType}/login`;
+        window.location.href = `${userType=='user'?'':userType}/login`;
       }
 
       return Promise.reject(error);

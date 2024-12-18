@@ -109,12 +109,6 @@ const FotpContext = () => {
           <p className="text-gray-500">Enter the 4-digit code sent to your mobile</p>
         </div>
 
-        {userId && (
-          <div className="text-center text-sm text-gray-600 mb-4">
-            User ID: <span className="font-semibold">{userId}</span>
-          </div>
-        )}
-
         <div className="flex justify-center space-x-2">
           {otp.map((digit, index) => (
             <input
