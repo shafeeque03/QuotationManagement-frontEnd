@@ -137,17 +137,17 @@ const QuotationDetailsContent = () => {
               </p>
               <p className="text-gray-700">
                 <span className="font-medium text-gray-900">Total Amount:</span>{" "}
-                {quotation.totalAmount?.toLocaleString() || "NA"}
+                {quotation.totalAmount?.toFixed(2) || "NA"}
               </p>
               <p className="text-gray-700">
                 <span className="font-medium text-gray-900">
                   {quotation.taxName}:
                 </span>{" "}
-                {quotation.tax?.toLocaleString() || "NA"}%
+                {quotation.tax?.toFixed(2) || "NA"}%
               </p>
               <p className="text-gray-700 font-semibold">
                 <span className="font-medium text-gray-900 ">SubTotal:</span>{" "}
-                {quotation.subTotal?.toLocaleString() || "NA"}
+                {quotation.subTotal?.toFixed(2) || "NA"}
               </p>
 
               {quotation.status === "rejected" && (

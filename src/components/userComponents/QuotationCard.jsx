@@ -57,7 +57,7 @@ const QuotationCard = ({ value }) => {
               <FileText className="w-6 h-6 text-indigo-600"/>
               <h3 className="text-lg font-bold bg-gradient-to-r from-indigo-600 to-purple-600 
               text-transparent bg-clip-text">
-                Quotation #{value.quotationId}
+                #{value.quotationId}
               </h3>
             </div>
             
@@ -72,6 +72,18 @@ const QuotationCard = ({ value }) => {
 
           {/* Quotation Details */}
           <div className="space-y-3">
+
+                 {/* Expiry Date */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2 text-gray-600">
+                <Calendar className="w-5 h-5 text-indigo-500"/>
+                <span className="text-sm">Created Date</span>
+              </div>
+              <span className="font-medium text-gray-800">
+                {new Date(value.createdAt).toLocaleDateString("en-GB")}
+              </span>
+            </div>
+
             {/* Expiry Date */}
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2 text-gray-600">
@@ -82,6 +94,8 @@ const QuotationCard = ({ value }) => {
                 {new Date(value.expireDate).toLocaleDateString("en-GB")}
               </span>
             </div>
+
+           
 
             {/* Total Amount */}
             <div className="flex items-center justify-between">

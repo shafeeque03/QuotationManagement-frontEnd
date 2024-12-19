@@ -1,8 +1,17 @@
 const { hosterAxiosInstance } = require("./axiosInstance");
 
 
-export const hosterLoginVerify = async (id,password)=>{
-    const data = await hosterAxiosInstance.post('/login',{id,password});
+export const hosterEmailVerify = async (id)=>{
+    const data = await hosterAxiosInstance.post('/login',{id});
+    return data
+}
+export const hosterOtpVerify = async (otp)=>{
+    const data = await hosterAxiosInstance.post('/verifyOtp',{otp});
+    return data
+}
+
+export const resendOtp = async()=>{
+    const data = await hosterAxiosInstance.post('/resendOtp');
     return data
 }
 
