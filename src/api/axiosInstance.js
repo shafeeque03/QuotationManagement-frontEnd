@@ -36,14 +36,14 @@ const createAxiosInstance = (baseURL, loginAction, logoutAction, userType) => {
     (response) => response,
     async (error) => {
       const originalRequest = error.config;
-
+      
       // If token expired (401 error) and it's not a retry
       if (error.response?.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
 
         try {
           // Call backend refresh token API (refreshToken is automatically sent via cookies)
-          const res = await axios.post(`${baseURL}auth/refresh-token`, {}, { 
+          const res = await axios.post(`${baseURL}auth/refresh-token`, {role:userType}, { 
             withCredentials: true 
           });
 
@@ -77,6 +77,7 @@ const createAxiosInstance = (baseURL, loginAction, logoutAction, userType) => {
         }
       } else if (error.response?.status === 401) {
         // If there's no valid token, redirect to login page
+        console.log("ivde calling")
         store.dispatch(logoutAction());
         let redirectPath;
         switch (userType) {
