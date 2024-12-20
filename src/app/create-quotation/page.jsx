@@ -16,6 +16,8 @@ import {
   UserIcon,
 } from "@heroicons/react/24/outline";
 
+import { Check, X } from 'lucide-react';
+
 import toast from "react-hot-toast";
 import useDebounce from "@/hook/useDebounce";
 import SelectClient from "@/components/userComponents/SelectClient";
@@ -30,6 +32,8 @@ const CreateQuotation = () => {
   const user = state?.user?.user;
   const adminId = user?.adminIs;
   const router = useRouter();
+
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   // State Management
   const [selectedProducts, setSelectedProducts] = useState([]);
@@ -224,17 +228,26 @@ const CreateQuotation = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
-    if (selectedProducts.length == 0 && selectedServices.length == 0) {
+    // Validation checks
+    if (selectedProducts.length === 0 && selectedServices.length === 0) {
       return toast.error("Select Product or Service");
     }
-    if (emails.length == 0) {
+    if (emails.length === 0) {
       return toast.error("Please add email");
     }
-    if(from.name.trim()==''||from.email.trim()==''||from.phone.trim()==''||from.address.trim()==''){
+    if (from.name.trim() === '' || from.email.trim() === '' || from.phone.trim() === '' || from.address.trim() === '') {
       return toast.error("Please add from details");
     }
+    
+    // Open confirmation modal instead of submitting directly
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleConfirmedSubmit = async () => {
+    setIsConfirmModalOpen(false);
+    
     const quotationData = {
       products: selectedProducts.map((p) => ({
         name: p.name,
@@ -265,7 +278,7 @@ const CreateQuotation = () => {
     };
 
     try {
-    setSubmited(true);
+      setSubmited(true);
       const res = await addQuotation(quotationData, adminId);
       if (res?.status === 200) {
         toast.success(res?.data?.message);
@@ -277,6 +290,46 @@ const CreateQuotation = () => {
     } finally {
       setSubmited(false);
     }
+  };
+
+  // Confirmation Modal Component
+  const ConfirmationModal = () => {
+    if (!isConfirmModalOpen) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold">Confirm Create Quotation</h3>
+            <button
+              onClick={() => setIsConfirmModalOpen(false)}
+              className="text-gray-500 hover:text-gray-700 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          
+          <p className="text-gray-600 mb-6">
+            Are you sure you want to create this quotation? Please review all details before confirming.
+          </p>
+          
+          <div className="flex gap-3 justify-end">
+            <button
+              onClick={() => setIsConfirmModalOpen(false)}
+              className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleConfirmedSubmit}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              Create Quotation
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   const renderStep = () => {
@@ -503,17 +556,18 @@ const CreateQuotation = () => {
     <div className="min-h-screen bg-gray-50">
       <UserMenu />
       <div className="container mx-auto px-4 py-12">
-        <form onSubmit={handleSubmit} className="max-w-5xl mx-auto">
-          <div className="bg-white shadow-2xl rounded-xl p-12">
+        <form onSubmit={handleFormSubmit} className="max-w-7xl mx-auto">
+          <div className="bg-white shadow-2xl rounded-xl p-12 relative">
+
             {/* Progress Indicator */}
             <div className="flex justify-between mb-12">
               {[1, 2, 3, 4, 5, 6].map((num) => (
                 <div
                   key={num}
                   className={`
-                w-1/4 h-2 mx-3 rounded-full transition-all
-                ${step >= num ? "bg-indigo-600" : "bg-gray-200"}
-              `}
+                    w-1/4 h-2 mx-3 rounded-full transition-all
+                    ${step >= num ? "bg-indigo-600" : "bg-gray-200"}
+                  `}
                 />
               ))}
             </div>
@@ -522,6 +576,9 @@ const CreateQuotation = () => {
             {renderStep()}
           </div>
         </form>
+
+        {/* Confirmation Modal */}
+        <ConfirmationModal />
 
         {/* New Client Modal */}
         {renderNewClientModal()}

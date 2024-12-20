@@ -1,31 +1,13 @@
 import React, { useState,useRef } from "react";
 
-const FinalSection = ({
-  CheckIcon,
-  selectedProducts,
-  selectedServices,
-  expireDate,
-  setExpireDate,
-  today,
-  totalAmount,
-  setStep,
-  clientIs,
-  file,
-  removeFile,
-  tax,
-  setTax,
-  subTotal,
-  taxName,
-  setTaxName,
-  showPrice,
-  setShowPrice,
-  emails,
-  setEmails,
-  submited,
-  from,
-  setFrom,
-  logo,
-  setLogo,
+const FinalSection = ({CheckIcon,selectedProducts,selectedServices,
+  expireDate,setExpireDate,today,
+  totalAmount,setStep,clientIs,
+  file,removeFile,tax,
+  setTax,subTotal,taxName,
+  setTaxName,showPrice,setShowPrice,
+  emails,setEmails,submited,
+  from,setFrom,logo,setLogo,
 }) => {
   const [newEmail, setNewEmail] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -274,7 +256,7 @@ const FinalSection = ({
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-2xl">
+    <div className="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-2xl">
       <h2 className="text-2xl font-bold mb-6 pb-3 border-b-2 border-gray-200 flex items-center">
         <CheckIcon className="w-8 h-8 mr-3 text-green-500" />
         Review Quotation

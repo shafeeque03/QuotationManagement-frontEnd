@@ -15,6 +15,7 @@ import {
   XMarkIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
+import { Check, X } from 'lucide-react';
 
 import toast from "react-hot-toast";
 import useDebounce from "@/hook/useDebounce";
@@ -31,6 +32,8 @@ const UpdateQuotation = ({ params }) => {
   const user = state?.user?.user;
   const adminId = user?.adminIs;
   const router = useRouter();
+
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   // State Management
   const [selectedProducts, setSelectedProducts] = useState([]);
@@ -209,17 +212,26 @@ const UpdateQuotation = ({ params }) => {
   };
 
 
-  const handleSubmit = async (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
-    if (selectedProducts.length == 0 && selectedServices.length == 0) {
+    // Validation checks
+    if (selectedProducts.length === 0 && selectedServices.length === 0) {
       return toast.error("Select Product or Service");
     }
-    if (emails.length == 0) {
+    if (emails.length === 0) {
       return toast.error("Please add email");
     }
-    if(from.name.trim()==''||from.email.trim()==''||from.phone.trim()==''||from.address.trim()==''){
+    if (from.name.trim() === '' || from.email.trim() === '' || from.phone.trim() === '' || from.address.trim() === '') {
       return toast.error("Please add from details");
     }
+    
+    // Open confirmation modal instead of submitting directly
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleConfirmedSubmit = async () => {
+    setIsConfirmModalOpen(false);
+    
     const quotationData = {
       products: selectedProducts.map((p) => ({
         name: p.name,
@@ -258,9 +270,48 @@ const UpdateQuotation = ({ params }) => {
     } catch (error) {
       toast.error(error.response?.data?.message);
       console.error(error.message);
-    }finally {
+    } finally {
       setSubmited(false);
     }
+  };
+
+  const ConfirmationModal = () => {
+    if (!isConfirmModalOpen) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold">Confirm Quotation Update</h3>
+            <button
+              onClick={() => setIsConfirmModalOpen(false)}
+              className="text-gray-500 hover:text-gray-700 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          
+          <p className="text-gray-600 mb-6">
+            Are you sure you want to update this quotation? This action will modify the existing quotation details.
+          </p>
+          
+          <div className="flex gap-3 justify-end">
+            <button
+              onClick={() => setIsConfirmModalOpen(false)}
+              className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleConfirmedSubmit}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              Confirm Update
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   const renderStep = () => {
@@ -471,28 +522,57 @@ const UpdateQuotation = ({ params }) => {
     <div className="min-h-screen bg-gray-50">
       <UserMenu />
       <div className="container mx-auto px-4 py-12">
-            <h1 className="text-center font-bold text-2xl mb-4">Edit Quotation</h1>
-        <form onSubmit={handleSubmit} className="max-w-5xl mx-auto">
-          <div className="bg-white shadow-2xl rounded-xl p-12">
+        <h1 className="text-center font-bold text-2xl mb-4">Edit Quotation</h1>
+        <form onSubmit={handleFormSubmit} className="max-w-7xl mx-auto">
+          <div className="bg-white shadow-2xl rounded-xl p-12 relative">
+
             {/* Progress Indicator */}
-            <div className="flex justify-between mb-12">
+            <div className="flex items-center justify-center mb-12">
               {[1, 2, 3, 4, 5].map((num) => (
-                <div
-                  key={num}
-                  className={`
-                w-1/4 h-2 mx-3 rounded-full transition-all
-                ${step >= num ? "bg-indigo-600" : "bg-gray-200"}
-              `}
-                />
+                <div key={num} className="flex items-center">
+                  <div className="flex flex-col items-center">
+                    <div 
+                      className={`
+                        w-10 h-10 rounded-full flex items-center justify-center
+                        transition-all duration-500 border-2
+                        ${step > num 
+                          ? 'bg-green-500 border-green-500 text-white' 
+                          : step === num
+                          ? 'bg-indigo-600 border-indigo-600 text-white'
+                          : 'bg-white border-gray-300 text-gray-500'}
+                      `}
+                    >
+                      {step > num ? (
+                        <Check className="w-5 h-5" />
+                      ) : (
+                        <span className="font-semibold">{num}</span>
+                      )}
+                    </div>
+                  </div>
+                  {num < 5 && (
+                    <div className="w-24 h-1 mx-2">
+                      <div className={`
+                        h-full rounded-full transition-all duration-500
+                        ${step > num 
+                          ? 'bg-green-500' 
+                          : step === num
+                          ? 'bg-indigo-600'
+                          : 'bg-gray-200'}
+                      `} />
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
 
-            {/* Render current step */}
+            {/* Rest of the form content */}
             {renderStep()}
           </div>
         </form>
 
-        {/* New Client Modal */}
+        {/* Confirmation Modal */}
+        <ConfirmationModal />
+
         {renderNewClientModal()}
       </div>
     </div>
