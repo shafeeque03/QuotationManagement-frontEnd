@@ -26,10 +26,11 @@ const LoginPage = () => {
   
         // Store token in cookies (ensure secure flag is set for production)
         Cookies.set('userToken', res?.data?.accessToken, {
-          expires: 0.5, // 12 hours
+          expires: 7,
           secure: process.env.NODE_ENV === 'production', // Only set secure cookies in production
           sameSite: 'strict', // Protect against CSRF
         });
+        
   
         // Dispatch user login details to Redux store
         dispatch(userLogin({ token: res?.data?.accessToken, user: res?.data?.user }));

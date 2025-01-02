@@ -26,7 +26,7 @@ const FuturisticLoginPage = () => {
         }else{
           toast.success(res?.data?.message);
         Cookies.set('adminToken', res?.data?.accessToken, {
-          expires: 0.5, // 12 hours
+          expires: 7,
           secure: process.env.NODE_ENV === 'production', // Only set secure cookies in production
           sameSite: 'strict', // Protect against CSRF
         });

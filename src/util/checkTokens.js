@@ -1,47 +1,44 @@
-import Cookies from "js-cookie";
 import jwt from "jsonwebtoken";
+import Cookies from "js-cookie";
 
-// Helper function to check if a token is expired
-const isTokenExpired = (token) => {
-  try {
-    const decoded = jwt.decode(token);
-    return decoded?.exp * 1000 < Date.now(); // Compare expiration with current time
-  } catch (error) {
-    return true; // Treat invalid tokens as expired
-  }
-};
+export const cleanExpiredTokens = () => {
+  const reduxState = JSON.parse(localStorage.getItem("reduxState") || "{}");
 
-// Function to validate tokens and clean up expired ones
-export const checkAndClearExpiredTokens = () => {
-  const state = JSON.parse(localStorage.getItem("reduxState") || "{}");
+  // Check if the token is expired
+  const isTokenExpired = (token) => {
+    try {
+      const decoded = jwt.decode(token);
+      return decoded?.exp * 1000 < Date.now();
+    } catch (error) {
+      return true; // Consider invalid tokens as expired
+    }
+  };
 
-  // User token check
-  if (state.user?.token && isTokenExpired(state.user.token)) {
-    localStorage.setItem(
-      "reduxState",
-      JSON.stringify({ ...state, user: { token: null, user: null } })
-    );
-    Cookies.remove("userToken");
-    window.location.href = "/login";
-  }
+  const newState = { ...reduxState };
 
-  // Admin token check
-  if (state.admin?.token && isTokenExpired(state.admin.token)) {
-    localStorage.setItem(
-      "reduxState",
-      JSON.stringify({ ...state, admin: { token: null, admin: null } })
-    );
-    Cookies.remove("adminToken");
-    window.location.href = "/admin/login";
+  // Fetch tokens from cookies
+  const userToken = Cookies.get("userToken");
+  const adminToken = Cookies.get("adminToken");
+  const hosterToken = Cookies.get("hosterToken");
+
+  // Validate and clean user token
+  if (!userToken || isTokenExpired(userToken)) {
+    newState.user = { token: null, user: null };
+    Cookies.remove("userToken"); // Remove invalid cookie
   }
 
-  // Hoster token check
-  if (state.hoster?.token && isTokenExpired(state.hoster.token)) {
-    localStorage.setItem(
-      "reduxState",
-      JSON.stringify({ ...state, hoster: { token: null, hoster: null } })
-    );
-    Cookies.remove("hosterToken");
-    window.location.href = "/hoster/login";
+  // Validate and clean admin token
+  if (!adminToken || isTokenExpired(adminToken)) {
+    newState.admin = { token: null, admin: null };
+    Cookies.remove("adminToken"); // Remove invalid cookie
   }
+
+  // Validate and clean hoster token
+  if (!hosterToken || isTokenExpired(hosterToken)) {
+    newState.hoster = { token: null, hoster: null };
+    Cookies.remove("hosterToken"); // Remove invalid cookie
+  }
+
+  // Update the localStorage with the cleaned state
+  localStorage.setItem("reduxState", JSON.stringify(newState));
 };

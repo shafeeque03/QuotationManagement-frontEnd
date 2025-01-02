@@ -529,6 +529,7 @@ const FinalSection = ({CheckIcon,selectedProducts,selectedServices,
           <span className="text-xl font-bold">{subTotal.toFixed(2)}</span>
         </div>
       </div>
+      {submited&&<div className="m-auto"><p className="text-center text-red-400">Please do not click the back button or leave this page. The process may take a moment to complete.</p></div>}
 
       {/* Navigation Buttons */}
       <div className="flex justify-between mt-8">

@@ -132,6 +132,10 @@ const QuotationDetailsContent = () => {
                 {quotation.quotationId}
               </p>
               <p className="text-gray-700">
+                <span className="font-medium text-gray-900">Created Date:</span>{" "}
+                {new Date(quotation.createdAt).toLocaleDateString()}
+              </p>
+              <p className="text-gray-700">
                 <span className="font-medium text-gray-900">Expire Date:</span>{" "}
                 {new Date(quotation.expireDate).toLocaleDateString()}
               </p>
@@ -286,7 +290,6 @@ const QuotationDetailsContent = () => {
           </h3>
           {quotation.services.length > 0 ? (
             <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-4">Selected Services</h3>
               <div className="overflow-x-auto">
                 <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
                   <thead className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">

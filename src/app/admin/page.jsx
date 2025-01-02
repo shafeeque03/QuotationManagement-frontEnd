@@ -13,6 +13,7 @@ const Dashboard = () => {
   const [products, setProducts] = useState(0);
   const [services, setServices] = useState(0);
   const [revenueData, setRevenueData] = useState([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const state = useSelector((state) => state);
   const admin = state?.admin?.admin;
@@ -32,7 +33,6 @@ const Dashboard = () => {
       });
   }, []);
 
-  // Prepare data for the graph
   const today = new Date();
   const labels = Array.from({ length: 7 }, (_, i) => {
     const day = new Date(today);
@@ -51,12 +51,12 @@ const Dashboard = () => {
       {
         label: "Daily Revenue",
         data: revenueValues,
-        fill: false,
-        borderColor: "#34d399",
-        backgroundColor: "#34d399",
+        fill: true,
+        borderColor: "#4F46E5",
+        backgroundColor: "rgba(79, 70, 229, 0.1)",
         borderWidth: 2,
-        pointRadius: 5,
-        pointBackgroundColor: "#34d399",
+        pointRadius: 4,
+        pointBackgroundColor: "#4F46E5",
         tension: 0.4,
       },
     ],
@@ -64,56 +64,98 @@ const Dashboard = () => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         display: true,
         position: "top",
+        labels: {
+          font: {
+            family: "Inter, sans-serif",
+            size: 12
+          }
+        }
       },
+      tooltip: {
+        backgroundColor: "rgba(255, 255, 255, 0.9)",
+        titleColor: "#1F2937",
+        bodyColor: "#1F2937",
+        borderColor: "#E5E7EB",
+        borderWidth: 1,
+        padding: 12,
+        displayColors: false,
+        callbacks: {
+          label: (context) => `Revenue: $${context.raw.toLocaleString()}`
+        }
+      }
     },
     scales: {
       y: {
         beginAtZero: true,
-        grid: { color: "#f3f4f6" },
+        grid: { 
+          color: "rgba(243, 244, 246, 0.8)",
+          drawBorder: false
+        },
+        ticks: {
+          font: {
+            family: "Inter, sans-serif",
+            size: 12
+          }
+        }
       },
       x: {
-        grid: { color: "#f3f4f6" },
-      },
-    },
+        grid: { 
+          display: false 
+        },
+        ticks: {
+          font: {
+            family: "Inter, sans-serif",
+            size: 12
+          }
+        }
+      }
+    }
   };
 
   const statsCards = [
-    { icon: FileText, title: "Total Quotations", value: quotations, color: "text-blue-600" },
-    { icon: Users, title: "Total Users", value: users, color: "text-green-600" },
-    { icon: Box, title: "Total Products", value: products, color: "text-purple-600" },
-    { icon: Settings, title: "Total Services", value: services, color: "text-orange-600" },
+    { icon: FileText, title: "Total Quotations", value: quotations, color: "text-indigo-600", bgColor: "bg-indigo-50" },
+    { icon: Users, title: "Total Users", value: users, color: "text-emerald-600", bgColor: "bg-emerald-50" },
+    { icon: Box, title: "Total Products", value: products, color: "text-violet-600", bgColor: "bg-violet-50" },
+    { icon: Settings, title: "Total Services", value: services, color: "text-amber-600", bgColor: "bg-amber-50" },
   ];
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
       <Sidebar />
-      <main className="flex-grow p-6 lg:p-8 space-y-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <main className="flex-grow p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
           {statsCards.map((card, index) => (
             <div
               key={index}
-              className="bg-white rounded-xl shadow-md p-6 border border-gray-100 transition-all duration-300 hover:shadow-lg hover:scale-105"
+              className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 transition-all duration-300 hover:shadow-lg hover:translate-y-[-4px]"
             >
               <div className="flex items-center justify-between mb-4">
-                <card.icon className={`w-10 h-10 ${card.color}`} />
-                <span className="text-sm text-gray-500 font-medium">{card.title}</span>
+                <div className={`p-3 rounded-xl ${card.bgColor}`}>
+                  <card.icon className={`w-6 h-6 ${card.color}`} />
+                </div>
+                <span className="text-sm text-gray-600 font-medium">{card.title}</span>
               </div>
-              <p className="text-3xl font-bold text-gray-800">{card.value}</p>
+              <p className="text-2xl sm:text-3xl font-bold text-gray-800">
+                {card.value.toLocaleString()}
+              </p>
             </div>
           ))}
         </div>
 
-        {/* Graph Section */}
-        <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-gray-800">Daily Revenue</h2>
-            <span className="text-sm text-gray-500">Last 7 Days</span>
+        <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 border border-gray-100">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+            <h2 className="text-xl font-semibold text-gray-800">Revenue Overview</h2>
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-gray-500">Last 7 Days</span>
+              <div className="h-2 w-2 rounded-full bg-indigo-500"></div>
+            </div>
           </div>
-          <div className="h-[350px]">
+          <div className="h-[300px] sm:h-[400px]">
             <Line data={data} options={options} />
           </div>
         </div>

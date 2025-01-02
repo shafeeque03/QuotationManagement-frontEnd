@@ -15,7 +15,8 @@ import {
   LogOut,
   Settings,
   FilePen,
-  UserPen
+  UserPen,
+  Building
   
 } from "lucide-react";
 import Cookies from 'js-cookie';
@@ -51,6 +52,7 @@ const Sidebar = () => {
     { path: "/admin/clients", icon: Building2, label: "Clients" },
     { path: "/admin/products", icon: Package, label: "Product" },
     { path: "/admin/services", icon: Settings, label: "Service" },
+    { path: "/admin/companies", icon: Building, label: "Companies" },
     { path: "/admin/report", icon: FilePen, label: "Report" },
     { path: "/admin/profile", icon: UserPen, label: "Profile" },
   ];

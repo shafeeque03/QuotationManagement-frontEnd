@@ -130,23 +130,28 @@ const QuotationDashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {quotations.map((quotation,index) => (
+              {quotations.map((quotation, index) => (
                 <tr
-                key={quotation.id||index}
+                  key={quotation.id || index}
                   className="border-b hover:bg-gray-50 transition"
                 >
-                  <td className="p-4 text-gray-800">{quotation.quotationId}</td>
-                  <td className="p-4 text-gray-600">
-                    {new Date(quotation.createdAt)
-                      .toLocaleDateString("en-GB")}
+                  <td
+                    className="p-4 text-gray-800 hover:text-blue-600 cursor-pointer"
+                    onClick={() =>
+                      (window.location.href = `/quotation-details?qid=${quotation._id}`)
+                    }
+                  >
+                    {quotation.quotationId}
                   </td>
                   <td className="p-4 text-gray-600">
-                    {new Date(quotation.expireDate)
-                      .toLocaleDateString("en-GB")}
+                    {new Date(quotation.createdAt).toLocaleDateString("en-GB")}
+                  </td>
+                  <td className="p-4 text-gray-600">
+                    {new Date(quotation.expireDate).toLocaleDateString("en-GB")}
                   </td>
 
                   <td className="p-4 font-medium text-gray-800">
-                    {quotation.subTotal||'N/A'}
+                    {quotation.subTotal || "N/A"}
                   </td>
                   <td className="p-4">
                     <StatusBadge status={quotation.status} />
